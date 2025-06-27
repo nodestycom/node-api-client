@@ -1,0 +1,51 @@
+{
+    "name": "@nodesty/api-client",
+    "version": "1.0.0",
+    "description": "A powerful API client for Nodesty.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsdown",
+        "lint": "prettier --check . && eslint .",
+        "lint:fix": "prettier --write . && eslint . --fix",
+        "release": "changelogen --release"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nodestycom/node-api-client.git"
+    },
+    "keywords": [
+        "nodesty",
+        "api",
+        "client",
+        "api-client",
+        "nodesty-api-client"
+    ],
+    "author": "hanzydev",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/nodestycom/node-api-client/issues"
+    },
+    "homepage": "https://github.com/nodestycom/node-api-client#readme",
+    "dependencies": {
+        "defu": "^6.1.4",
+        "ofetch": "^1.4.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.29.0",
+        "changelogen": "^0.6.1",
+        "eslint": "^9.29.0",
+        "eslint-config-prettier": "^10.1.5",
+        "eslint-plugin-prettier": "^5.5.1",
+        "globals": "^16.2.0",
+        "prettier": "^3.6.2",
+        "tsdown": "^0.12.9",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.35.0"
+    },
+    "type": "module",
+    "packageManager": "pnpm@10.12.1"
+}
