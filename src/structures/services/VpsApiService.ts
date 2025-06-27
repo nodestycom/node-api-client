@@ -7,7 +7,7 @@ export class VpsApiService {
     /**
      * Perform an action on a VPS
      * @param id Service ID
-     * @param action Action to perform (start, stop, restart, poweroff)
+     * @param action Action to perform
      */
     public performAction(id: string, action: VpsAction) {
         return this.apiFetch<ApiResponse<void>>(`/services/${id}/vps/action`, {
@@ -87,6 +87,10 @@ export class VpsApiService {
         });
     }
 
+    /**
+     * Get VPS tasks
+     * @param id Service ID
+     */
     public getTasks(id: string) {
         return this.apiFetch<ApiResponse<VpsTask[]>>(`/services/${id}/vps/tasks`);
     }
@@ -95,7 +99,12 @@ export class VpsApiService {
 /**
  * Represents the action to be performed on a VPS.
  */
-export type VpsAction = 'start' | 'stop' | 'restart' | 'poweroff';
+export enum VpsAction {
+    Start = 'start',
+    Stop = 'stop',
+    Restart = 'restart',
+    ForceStop = 'poweroff',
+}
 
 /**
  * Represents a backup of a VPS.
@@ -520,7 +529,7 @@ export interface VpsBandwidthDetails {
 }
 
 /**
- * Represents the detailed information about a Virtual Private Server (VPS).
+ * Represents the detailed information about a VPS.
  */
 export interface VpsDetails {
     /**
