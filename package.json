@@ -11,7 +11,8 @@
         "build": "tsdown",
         "lint": "prettier --check . && eslint .",
         "lint:fix": "prettier --write . && eslint . --fix",
-        "release": "changelogen --release"
+        "release": "changelogen --release",
+        "check": "pnpm build && pnpm lint"
     },
     "repository": {
         "type": "git",

@@ -8,7 +8,7 @@ import {
     type RestClientOptions,
 } from '.';
 
-export class NodestyAPIClient {
+export class NodestyApiClient {
     public apiFetch: $Fetch;
 
     public constructor(options: RestClientOptions) {
