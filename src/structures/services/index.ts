@@ -1,1 +1,2 @@
-export * from './UserAPIService';
+export * from './UserApiService';
+export * from './VpsApiService';

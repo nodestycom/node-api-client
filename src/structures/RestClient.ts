@@ -35,7 +35,7 @@ export interface RestClientOptions {
 /**
  * Represents a standard API response structure.
  */
-export interface APIResponse<T = any> {
+export interface ApiResponse<T = any> {
     /**
      * Indicates whether the request was successful.
      */
@@ -71,7 +71,7 @@ export const createFetch = ({ accessToken, ...options }: RestClientOptions) =>
             const rawData = response._data;
 
             if (rawData) {
-                let normalizedData: APIResponse;
+                let normalizedData: ApiResponse;
 
                 if (rawData.error) {
                     normalizedData = {

@@ -1,14 +1,14 @@
 import type { $Fetch } from 'ofetch';
-import type { APIResponse } from '..';
+import type { ApiResponse } from '..';
 
-export class UserAPIService {
+export class UserApiService {
     public constructor(private apiFetch: $Fetch) {}
 
     /**
      * Get the current user services
      */
     public getServices() {
-        return this.apiFetch<APIResponse<Service[]>>('/services');
+        return this.apiFetch<ApiResponse<Service[]>>('/services');
     }
 
     /**
@@ -16,21 +16,21 @@ export class UserAPIService {
      * @param ticketId Ticket ID
      */
     public getTicketById(ticketId: string) {
-        return this.apiFetch<APIResponse<Ticket>>(`/tickets/${ticketId}`);
+        return this.apiFetch<ApiResponse<Ticket>>(`/tickets/${ticketId}`);
     }
 
     /**
      * Get the current user tickets
      */
     public getTickets() {
-        return this.apiFetch<APIResponse<Omit<Ticket, 'messages'>[]>>('/tickets');
+        return this.apiFetch<ApiResponse<Omit<Ticket, 'messages'>[]>>('/tickets');
     }
 
     /**
      * Get the current user information
      */
     public getCurrentUser() {
-        return this.apiFetch<APIResponse<User>>('/users/@me');
+        return this.apiFetch<ApiResponse<User>>('/users/@me');
     }
 
     /**
@@ -38,21 +38,21 @@ export class UserAPIService {
      * @param invoiceId Invoice ID
      */
     public getInvoiceById(invoiceId: string) {
-        return this.apiFetch<APIResponse<Invoice>>(`/users/@me/invoices/${invoiceId}`);
+        return this.apiFetch<ApiResponse<Invoice>>(`/users/@me/invoices/${invoiceId}`);
     }
 
     /**
      * Get the current user invoices
      */
     public getInvoices() {
-        return this.apiFetch<APIResponse<Omit<Invoice, 'items'>[]>>('/users/@me/invoices');
+        return this.apiFetch<ApiResponse<Omit<Invoice, 'items'>[]>>('/users/@me/invoices');
     }
 
     /**
      * Get the current user sessions
      */
     public getSessions() {
-        return this.apiFetch<APIResponse<Session[]>>('/users/@me/sessions');
+        return this.apiFetch<ApiResponse<Session[]>>('/users/@me/sessions');
     }
 }
 

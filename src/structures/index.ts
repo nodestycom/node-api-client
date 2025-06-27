@@ -1,3 +1,3 @@
-export * from './RESTClient';
-export * from './APIClient';
+export * from './RestClient';
+export * from './ApiClient';
 export * from './services';

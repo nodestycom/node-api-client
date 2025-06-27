@@ -1,5 +1,5 @@
 import type { $Fetch } from 'ofetch';
-import { createFetch, UserAPIService, type RestClientOptions } from '.';
+import { createFetch, UserApiService, VpsApiService, type RestClientOptions } from '.';
 
 export class NodestyAPIClient {
     public apiFetch: $Fetch;
@@ -9,6 +9,10 @@ export class NodestyAPIClient {
     }
 
     public get user() {
-        return new UserAPIService(this.apiFetch);
+        return new UserApiService(this.apiFetch);
+    }
+
+    public get vps() {
+        return new VpsApiService(this.apiFetch);
     }
 }
