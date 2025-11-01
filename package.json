@@ -33,7 +33,7 @@
     "homepage": "https://github.com/nodestycom/node-api-client#readme",
     "dependencies": {
         "defu": "^6.1.4",
-        "ofetch": "^1.4.1"
+        "ofetch": "^1.5.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.30.0",
