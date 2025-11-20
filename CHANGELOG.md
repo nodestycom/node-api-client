@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v2.0.1
+
+[compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.0...v2.0.1)
+
+### 🩹 Fixes
+
+- Correct method name for Mail Hosting API service in NodestyApiClient ([5e94a87](https://github.com/nodestycom/node-api-client/commit/5e94a87))
+
+### ❤️ Contributors
+
+- Hanzydev <contact@hanzy.dev>
+
 ## v2.0.0
 
 [compare changes](https://github.com/nodestycom/node-api-client/compare/v1.0.0...v2.0.0)
