@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v2.0.2
+
+[compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.1...v2.0.2)
+
+### 🩹 Fixes
+
+- Correct API response type for MailHostingApiService.getDetails method ([31a7d1c](https://github.com/nodestycom/node-api-client/commit/31a7d1c))
+
+### 💅 Refactors
+
+- Simplify API fetch calls by removing unnecessary method specifications ([e29043f](https://github.com/nodestycom/node-api-client/commit/e29043f))
+
+### ❤️ Contributors
+
+- Hanzydev <contact@hanzy.dev>
+
 ## v2.0.1
 
 [compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.0...v2.0.1)
