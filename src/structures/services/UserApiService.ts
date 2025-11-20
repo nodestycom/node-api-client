@@ -52,18 +52,14 @@ export class UserApiService {
      * Get the current user sessions
      */
     public getSessions() {
-        return this.apiFetch<ApiResponse<Session[]>>('/users/@me/sessions', {
-            method: 'GET',
-        });
+        return this.apiFetch<ApiResponse<Session[]>>('/users/@me/sessions');
     }
 
     /**
      * Get the current user referral code
      */
     public getReferralCode() {
-        return this.apiFetch<ApiResponse<UserReferralCode>>('/users/@me/referral', {
-            method: 'GET',
-        });
+        return this.apiFetch<ApiResponse<UserReferralCode>>('/users/@me/referral');
     }
 }
 

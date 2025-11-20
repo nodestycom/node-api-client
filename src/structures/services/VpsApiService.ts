@@ -45,9 +45,7 @@ export class VpsApiService {
      * @param id Service ID
      */
     public getBackups(id: string) {
-        return this.apiFetch<ApiResponse<VpsBackup[]>>(`/services/${id}/vps/backups`, {
-            method: 'GET',
-        });
+        return this.apiFetch<ApiResponse<VpsBackup[]>>(`/services/${id}/vps/backups`);
     }
 
     /**
