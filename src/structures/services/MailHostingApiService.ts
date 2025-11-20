@@ -9,7 +9,7 @@ export class MailHostingApiService {
      * @param id Service ID
      */
     public getDetails(id: string) {
-        return this.apiFetch<ApiResponse<MailHostingDetails[]>>(`/services/${id}/mail/info`);
+        return this.apiFetch<ApiResponse<MailHostingDetails>>(`/services/${id}/mail/info`);
     }
 }
 
