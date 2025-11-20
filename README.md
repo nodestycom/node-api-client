@@ -32,6 +32,7 @@ const user = api.user;
 const vps = api.vps;
 const firewall = api.firewall;
 const dedicatedServer = api.dedicatedServer;
+const mailHosting = api.mailHosting;
 ```
 
 ## ❤️ Contribute

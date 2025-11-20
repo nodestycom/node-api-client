@@ -47,7 +47,7 @@ export class NodestyApiClient {
     /**
      * Get the Mail Hosting API Service instance
      */
-    public get mail() {
+    public get mailHosting() {
         return new MailHostingApiService(this.apiFetch);
     }
 }
