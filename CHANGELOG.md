@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v2.0.0
+
+[compare changes](https://github.com/nodestycom/node-api-client/compare/v1.0.0...v2.0.0)
+
+### 🚀 Enhancements
+
+- Update API client structures and services to match latest API spec ([192d07e](https://github.com/nodestycom/node-api-client/commit/192d07e))
+
+### 🏡 Chore
+
+- Remove renovate ([7d45c5f](https://github.com/nodestycom/node-api-client/commit/7d45c5f))
+
+### ❤️ Contributors
+
+- Hanzydev <contact@hanzy.dev>
+
 ## v1.0.0
 
 
