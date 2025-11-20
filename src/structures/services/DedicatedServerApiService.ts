@@ -21,7 +21,7 @@ export class DedicatedServerApiService {
      * @param id Service ID
      */
     public getHardwareComponents(id: string) {
-        return this.apiFetch<ApiResponse<DedicatedServerHardwareComponent>>(
+        return this.apiFetch<ApiResponse<DedicatedServerHardwareComponent[]>>(
             `/services/${id}/dedicated/hardware`,
         );
     }

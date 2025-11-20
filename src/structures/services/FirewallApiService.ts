@@ -98,19 +98,7 @@ export class FirewallApiService {
      * @param ip IP Address
      */
     public getRules(id: string, ip: string) {
-        return this.apiFetch<ApiResponse<FirewallRule>>(`/services/${id}/firewall/${ip}/rules`);
-    }
-
-    /**
-     * Get nShield rules for a specific IP address on a VPS or Dedicated Server
-     * @param id Service ID
-     * @param ip IP Address
-     */
-    public createRule(id: string, ip: string, data: FirewallCreateRuleData) {
-        return this.apiFetch<ApiResponse<void>>(`/services/${id}/firewall/${ip}/rules`, {
-            method: 'POST',
-            body: data,
-        });
+        return this.apiFetch<ApiResponse<FirewallRule[]>>(`/services/${id}/firewall/${ip}/rules`);
     }
 
     /**
@@ -119,7 +107,7 @@ export class FirewallApiService {
      * @param ip IP Address
      */
     public getStatistics(id: string, ip: string) {
-        return this.apiFetch<ApiResponse<FirewallStatistics>>(
+        return this.apiFetch<ApiResponse<FirewallStatistics[]>>(
             `/services/${id}/firewall/${ip}/stats`,
         );
     }
@@ -214,23 +202,6 @@ export interface FirewallRule {
 }
 
 /**
- * Represents the data required to create a new nShield rule for a specific IP address on a VPS or Dedicated Server.
- */
-export interface FirewallCreateRuleData {
-    /**
-     * Port number for the rule
-     * @example 25565
-     */
-    port: number;
-
-    /**
-     * Application ID for the rule
-     * @example 25565
-     */
-    appId: number;
-}
-
-/**
  * Represents nShield statistics for a specific IP address on a VPS or Dedicated Server.
  */
 export interface FirewallStatistics {
@@ -238,7 +209,7 @@ export interface FirewallStatistics {
      * Timestamp of the traffic data.
      * @format date-time
      */
-    timestamp: string;
+    timestamp: number;
 
     /**
      * Total traffic that passed through the nShield.

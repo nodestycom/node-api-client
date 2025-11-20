@@ -52,7 +52,18 @@ export class UserApiService {
      * Get the current user sessions
      */
     public getSessions() {
-        return this.apiFetch<ApiResponse<Session[]>>('/users/@me/sessions');
+        return this.apiFetch<ApiResponse<Session[]>>('/users/@me/sessions', {
+            method: 'GET',
+        });
+    }
+
+    /**
+     * Get the current user referral code
+     */
+    public getReferralCode() {
+        return this.apiFetch<ApiResponse<UserReferralCode>>('/users/@me/referral', {
+            method: 'GET',
+        });
     }
 }
 
@@ -158,6 +169,12 @@ export interface Service {
     rawName: string;
 
     /**
+     * Name of the service without the group name prefix
+     * @example "i7-7700"
+     */
+    nameWithoutGroupName: string;
+
+    /**
      * Domain associated with the service
      * @example "abcdefgh.nodesty.com"
      */
@@ -216,9 +233,9 @@ export interface Service {
 
     /**
      * Dedicated server ID if applicable, otherwise null
-     * @example ["s100", "28572"]
+     * @example "s100"
      */
-    dedicatedId: (string | null)[] | null;
+    dedicatedId: string | null;
 
     /**
      * Indicates if the service is a VPS
@@ -251,6 +268,12 @@ export interface Service {
     isSkyLinkDedicated: boolean;
 
     /**
+     * Indicates if the service is mail hosting
+     * @example false
+     */
+    isMailHosting: boolean;
+
+    /**
      * List of addons associated with the service
      */
     addons: ServiceAddon[];
@@ -260,6 +283,25 @@ export interface Service {
      * @example ["Unlimited Bandwidth", "24/7 Support", "Free SSL Certificate"]
      */
     features: string[];
+
+    /**
+     * List of IP addresses associated with the service
+     * @example ["192.168.1.1", "192.168.1.2"]
+     */
+    ips: string[];
+
+    /**
+     * Team ID if the service is associated with a team, otherwise null
+     * @nullable true
+     * @example 789
+     */
+    teamId: number | null;
+
+    /**
+     * Indicates if the current user is the owner of the service
+     * @example true
+     */
+    owner: boolean;
 }
 
 /**
@@ -702,4 +744,43 @@ export interface Session {
      * @example "2023-10-01T12:00:00Z"
      */
     lastSeen: string;
+}
+
+/**
+ * Represents the referral code information for a user.
+ */
+export interface UserReferralCode {
+    /**
+     * Referral code of the user.
+     * @example "cmdvq1hjm000008kvmkkk4gb6"
+     */
+    code: string;
+
+    /**
+     * Usage details of the referral code.
+     */
+    uses: {
+        /**
+         * Number of times the referral code has been used.
+         * @example 5
+         */
+        count: number;
+
+        /**
+         * List of referral usages.
+         */
+        data: {
+            /**
+             * Timestamp of when the referral was used.
+             * @example 1700000000000
+             */
+            date: number;
+
+            /**
+             * Amount earned from the referral use.
+             * @example 10
+             */
+            amount: number;
+        }[];
+    };
 }

@@ -19,16 +19,25 @@ export class VpsApiService {
     /**
      * Restore a VPS backup
      * @param id Service ID
-     * @param date Date of the backup
      * @param file Name of the backup file
      */
-    public restoreBackup(id: string, data: Omit<VpsBackup, 'createdAt'>) {
-        return this.apiFetch<ApiResponse<void>>(
-            `/services/${id}/vps/backups/${data.date}/${data.file}`,
-            {
-                method: 'POST',
-            },
-        );
+    public restoreBackup(id: string, file: string) {
+        return this.apiFetch<ApiResponse<void>>(`/services/${id}/vps/backups/${file}/restore`, {
+            method: 'POST',
+        });
+    }
+
+    /**
+     * Update a VPS backup
+     * @param id Service ID
+     * @param file Name of the backup file
+     * @param data Backup update data
+     */
+    public updateBackup(id: string, file: string, data: VpsUpdateBackupData) {
+        return this.apiFetch<ApiResponse<void>>(`/services/${id}/vps/backups/${file}`, {
+            method: 'PATCH',
+            body: data,
+        });
     }
 
     /**
@@ -36,7 +45,31 @@ export class VpsApiService {
      * @param id Service ID
      */
     public getBackups(id: string) {
-        return this.apiFetch<ApiResponse<VpsBackup[]>>(`/services/${id}/vps/backups`);
+        return this.apiFetch<ApiResponse<VpsBackup[]>>(`/services/${id}/vps/backups`, {
+            method: 'GET',
+        });
+    }
+
+    /**
+     * Create a new VPS backup
+     * @param id Service ID
+     */
+    public createBackup(id: string) {
+        return this.apiFetch<ApiResponse<void>>(`/services/${id}/vps/backups`, {
+            method: 'POST',
+        });
+    }
+
+    /**
+     * Change the daily backup status of a VPS
+     * @param id Service ID
+     * @param data Daily backup status data
+     */
+    public changeDailyBackupStatus(id: string, data: VpsDailyBackupStatusData) {
+        return this.apiFetch<ApiResponse<void>>(`/services/${id}/vps/backups/daily-backups`, {
+            method: 'PUT',
+            body: data,
+        });
     }
 
     /**
@@ -57,7 +90,7 @@ export class VpsApiService {
      * @param id Service ID
      */
     public getUsageStatistics(id: string) {
-        return this.apiFetch<ApiResponse<VpsUsageStatistics>>(`/services/${id}/vps/graphs`);
+        return this.apiFetch<ApiResponse<VpsUsageGraphEntry[]>>(`/services/${id}/vps/graphs`);
     }
 
     /**
@@ -101,9 +134,9 @@ export class VpsApiService {
  */
 export enum VpsAction {
     Start = 'start',
+    Shutdown = 'shutdown',
+    Reset = 'reset',
     Stop = 'stop',
-    Restart = 'restart',
-    ForceStop = 'poweroff',
 }
 
 /**
@@ -111,16 +144,16 @@ export enum VpsAction {
  */
 export interface VpsBackup {
     /**
-     * Date of the backup
-     * @example "2025-05-27"
-     */
-    date: string;
-
-    /**
      * Name of the backup file
-     * @example "vzdump-qemu-500-2025_05_27-04_13_58.vma"
+     * @example "backup-pool:backup/vm/2702/2025-08-09T18:11:41Z"
      */
     file: string;
+
+    /**
+     * Notes about the backup
+     * @example "Backup created before major update"
+     */
+    notes: string;
 
     /**
      * Unix timestamp when the backup was created
@@ -146,127 +179,51 @@ export interface VpsChangePasswordData {
 }
 
 /**
- * Represents a dictionary where keys are timestamps (or similar identifiers)
- * and values are numerical usage data (e.g., CPU, RAM, Disk, Inode usage).
- * @template T - The type of the value for each timestamp.
+ * Represents a single entry in the VPS usage statistics graph.
  */
-export interface VpsTimedUsageData<T = number> {
+export interface VpsUsageGraphEntry {
     /**
-     * Keys are typically timestamps (e.g., Unix milliseconds) and values are the corresponding usage.
-     * @example { "1625251200000": 4.25, "1625251201000": 4.30 }
+     * Network outbound traffic in bytes.
+     * @example 12345
      */
-    [timestamp: string]: T;
-}
-
-/**
- * Represents I/O speed data, including read, write, and corresponding timestamps.
- */
-export interface VpsIoSpeedData {
-    /**
-     * Array of I/O read speeds at specific timestamps.
-     * @items {number} I/O read speed at a specific timestamp
-     * @example [1024, 1050, 1030]
-     */
-    read: number[];
+    netOut: number;
 
     /**
-     * Array of I/O write speeds at specific timestamps.
-     * @items {number} I/O write speed at a specific timestamp
-     * @example [2048, 2100, 2070]
+     * Network inbound traffic in bytes.
+     * @example 12345
      */
-    write: number[];
+    netIn: number;
 
     /**
-     * Timestamps (categories) for I/O speed data. These usually correspond to the indices in `read` and `write` arrays.
-     * @items {number} Timestamps for I/O speed data (Unix milliseconds)
-     * @example [1625251200000, 1625251201000, 1625251202000]
+     * RAM usage in bytes.
+     * @example 12345
      */
-    categories: number[];
-}
-
-/**
- * Represents network speed data, including download, upload, and corresponding timestamps.
- */
-export interface VpsNetworkSpeedData {
-    /**
-     * Array of network download speeds at specific timestamps.
-     * @items {number} Network download speed at a specific timestamp
-     * @example [512, 530, 500]
-     */
-    download: number[];
+    ramUsage: number;
 
     /**
-     * Array of network upload speeds at specific timestamps.
-     * @items {number} Network upload speed at a specific timestamp
-     * @example [256, 260, 250]
+     * CPU usage in percentage.
+     * @example 12.34
      */
-    upload: number[];
+    cpuUsage: number;
 
     /**
-     * Timestamps (categories) for network speed data. These usually correspond to the indices in `download` and `upload` arrays.
-     * @items {number} Timestamps for network speed data (Unix milliseconds)
-     * @example [1625251200000, 1625251201000, 1625251202000]
+     * Disk read in bytes.
+     * @example 12345
      */
-    categories: number[];
-}
-
-/**
- * Represents various usage statistics for a VPS.
- */
-export interface VpsUsageStatistics {
-    /**
-     * Average download speed in bytes per second
-     * @example 123456
-     */
-    avgDownload: number;
+    diskRead: number;
 
     /**
-     * Average upload speed in bytes per second
-     * @example 654321
+     * Disk write in bytes.
+     * @example 12345
      */
-    avgUpload: number;
+    diskWrite: number;
 
     /**
-     * Average I/O read speed in bytes per second
-     * @example 789012
+     * Unix timestamp of the data.
+     * @format date-time
+     * @example 1704067200000
      */
-    avgIoRead: number;
-
-    /**
-     * Average I/O write speed in bytes per second
-     * @example 345678
-     */
-    avgIoWrite: number;
-
-    /**
-     * CPU usage data. Keys are timestamps, values are CPU usage percentages.
-     */
-    cpuUsage: VpsTimedUsageData;
-
-    /**
-     * Inode usage data. Keys are timestamps, values are inode counts.
-     */
-    inodeUsage: VpsTimedUsageData;
-
-    /**
-     * RAM usage data. Keys are timestamps, values are RAM usage in bytes.
-     */
-    ramUsage: VpsTimedUsageData;
-
-    /**
-     * Disk usage data. Keys are timestamps, values are disk usage in bytes.
-     */
-    diskUsage: VpsTimedUsageData;
-
-    /**
-     * I/O speed data, including read, write, and corresponding timestamps.
-     */
-    ioSpeed: VpsIoSpeedData;
-
-    /**
-     * Network speed data, including download, upload, and corresponding timestamps.
-     */
-    networkSpeed: VpsNetworkSpeedData;
+    timestamp: number;
 }
 
 /**
@@ -274,31 +231,15 @@ export interface VpsUsageStatistics {
  */
 export interface VpsVncDetails {
     /**
-     * Whether VNC is enabled for the VPS
-     * @example true
-     */
-    enabled: boolean;
-
-    /**
-     * IP address for VNC access
-     * @nullable true
-     * @example "192.168.1.100"
-     */
-    ip: string | null;
-
-    /**
      * Port for VNC access
-     * @nullable true
      * @example "5900"
      */
-    port: string | null;
+    port: string;
 
     /**
-     * VNC password
-     * @nullable true
-     * @example "securepassword123"
+     * VNC ticket
      */
-    password: string | null;
+    ticket: string;
 }
 
 /**
@@ -306,76 +247,22 @@ export interface VpsVncDetails {
  */
 export interface VpsOsDetails {
     /**
+     * ID of the operating system
+     * @example "debian"
+     */
+    id: string;
+
+    /**
      * Name of the operating system
-     * @example "Ubuntu 20.04"
+     * @example "Debian GNU/Linux 12 (bookworm)"
      */
     name: string;
-
-    /**
-     * Distribution of the operating system
-     * @example "ubuntu"
-     */
-    distro: string;
-}
-
-/**
- * Represents disk usage details for a VPS.
- */
-export interface VpsDiskUsage {
-    /**
-     * Disk space limit in bytes
-     * @example 10737418240
-     */
-    limit: number;
-
-    /**
-     * Used disk space in bytes
-     * @example 5368709120
-     */
-    used: number;
-
-    /**
-     * Free disk space in bytes
-     * @example 5368709120
-     */
-    free: number;
-
-    /**
-     * Percentage of used disk space
-     * @format float
-     * @example 50
-     */
-    percent: number;
 }
 
 /**
  * Represents CPU details and usage for a VPS.
  */
 export interface VpsCpuDetails {
-    /**
-     * CPU manufacturer
-     * @example "Intel"
-     */
-    manu: string;
-
-    /**
-     * CPU limit in MHz
-     * @example 2000
-     */
-    limit: number;
-
-    /**
-     * Used CPU in MHz
-     * @example 1500
-     */
-    used: number;
-
-    /**
-     * Free CPU in MHz
-     * @example 500
-     */
-    free: number;
-
     /**
      * CPU usage percentage
      * @format float
@@ -421,114 +308,6 @@ export interface VpsRamUsage {
 }
 
 /**
- * Represents Inode usage details for a VPS.
- */
-export interface VpsInodeUsage {
-    /**
-     * Inode limit
-     * @example 100000
-     */
-    limit: number;
-
-    /**
-     * Used inodes
-     * @example 50000
-     */
-    used: number;
-
-    /**
-     * Free inodes
-     * @example 50000
-     */
-    free: number;
-
-    /**
-     * Percentage of used inodes
-     * @format float
-     * @example 50
-     */
-    percent: number;
-}
-
-/**
- * Represents network speed details for a VPS.
- */
-export interface VpsNetworkSpeed {
-    /**
-     * Network speed in Mbps for incoming traffic
-     * @example 100
-     */
-    in: number;
-
-    /**
-     * Network speed in Mbps for outgoing traffic
-     * @example 100
-     */
-    out: number;
-}
-
-/**
- * Represents total bandwidth usage for a VPS.
- */
-export interface VpsTotalBandwidth {
-    /**
-     * Total bandwidth usage in bytes
-     * @example 10737418240
-     */
-    usage: number;
-
-    /**
-     * Total incoming bandwidth in bytes
-     * @example 5368709120
-     */
-    in: number;
-
-    /**
-     * Total outgoing bandwidth in bytes
-     * @example 5368709120
-     */
-    out: number;
-}
-
-/**
- * Represents daily bandwidth usage for a VPS, including total, incoming, and outgoing traffic over time.
- */
-export interface VpsBandwidthDetails {
-    /**
-     * Total bandwidth usage statistics.
-     */
-    total: VpsTotalBandwidth;
-
-    /**
-     * Daily total bandwidth usage in bytes.
-     * @items {number} Daily bandwidth usage in bytes
-     * @example [104857600, 105000000, 103000000]
-     */
-    usage: number[];
-
-    /**
-     * Daily incoming bandwidth in bytes.
-     * @items {number} Daily incoming bandwidth in bytes
-     * @example [52428800, 52500000, 51000000]
-     */
-    in: number[];
-
-    /**
-     * Daily outgoing bandwidth in bytes.
-     * @items {number} Daily outgoing bandwidth in bytes
-     * @example [52428800, 52500000, 52000000]
-     */
-    out: number[];
-
-    /**
-     * Array of timestamps (dates) representing the days for which bandwidth data is available.
-     * @items {string} Date string for bandwidth data
-     * @format date-time
-     */
-    categories: string[];
-}
-
-/**
  * Represents the detailed information about a VPS.
  */
 export interface VpsDetails {
@@ -551,12 +330,6 @@ export interface VpsDetails {
     hostname: string;
 
     /**
-     * Number of allowed OS reinstalls
-     * @example 3
-     */
-    osReinstallLimit: number;
-
-    /**
      * Current status of the VPS (true for active, false for inactive)
      * @example true
      */
@@ -573,9 +346,10 @@ export interface VpsDetails {
     os: VpsOsDetails;
 
     /**
-     * Disk usage details for the VPS.
+     * Total disk space in bytes
+     * @example 10737418240
      */
-    disk: VpsDiskUsage;
+    disk: number;
 
     /**
      * IP addresses assigned to the VPS
@@ -593,21 +367,6 @@ export interface VpsDetails {
      * RAM usage details for the VPS.
      */
     ram: VpsRamUsage;
-
-    /**
-     * Inode usage details for the VPS.
-     */
-    inode: VpsInodeUsage;
-
-    /**
-     * Network speed details for the VPS.
-     */
-    netspeed: VpsNetworkSpeed;
-
-    /**
-     * Bandwidth usage details for the VPS.
-     */
-    bandwidth: VpsBandwidthDetails;
 }
 
 /**
@@ -649,16 +408,16 @@ export interface VpsReinstallData {
  */
 export interface VpsTask {
     /**
-     * Description of the task action.
-     * @example "VM reboot initiated"
+     * Action of the task.
+     * @example "qmshutdown"
      */
     action: string;
 
     /**
-     * Progress of the task (0-100% or Task Completed).
-     * @example "50%"
+     * Status of the task.
+     * @example "OK"
      */
-    progress: string;
+    status: string;
 
     /**
      * Unix timestamp when the task started.
@@ -672,4 +431,32 @@ export interface VpsTask {
      * @nullable true
      */
     endedAt: number | null;
+}
+
+/**
+ * Represents the data required to update a VPS backup.
+ */
+export interface VpsUpdateBackupData {
+    /**
+     * Whether the backup is locked.
+     * @example true
+     */
+    locked?: boolean;
+
+    /**
+     * Notes about the backup.
+     * @example "Backup created before major update"
+     */
+    notes?: string;
+}
+
+/**
+ * Represents the data required to change the daily backup status of a VPS.
+ */
+export interface VpsDailyBackupStatusData {
+    /**
+     * Whether daily backups are enabled.
+     * @example true
+     */
+    enabled: boolean;
 }

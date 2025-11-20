@@ -5,6 +5,7 @@ import {
     VpsApiService,
     FirewallApiService,
     DedicatedServerApiService,
+    MailHostingApiService,
     type RestClientOptions,
 } from '.';
 
@@ -41,5 +42,12 @@ export class NodestyApiClient {
      */
     public get dedicatedServer() {
         return new DedicatedServerApiService(this.apiFetch);
+    }
+
+    /**
+     * Get the Mail Hosting API Service instance
+     */
+    public get mail() {
+        return new MailHostingApiService(this.apiFetch);
     }
 }
