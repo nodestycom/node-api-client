@@ -223,12 +223,14 @@ export interface Service {
 
     /**
      * VPS ID if applicable, otherwise null
+     * @nullable true
      * @example 12345
      */
     vpsId: number | null;
 
     /**
      * Dedicated server ID if applicable, otherwise null
+     * @nullable true
      * @example "s100"
      */
     dedicatedId: string | null;

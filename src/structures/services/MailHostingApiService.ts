@@ -169,6 +169,7 @@ export interface MailHostingDetails {
 
     /**
      * DKIM record details.
+     * @nullable true
      */
     dkim: {
         /**
