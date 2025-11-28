@@ -425,7 +425,7 @@ export interface VpsTask {
 
     /**
      * Unix timestamp when the task ended or null if not ended.
-     * @nullable true
+     * @nullable
      * @example 1625254800000
      */
     endedAt: number | null;

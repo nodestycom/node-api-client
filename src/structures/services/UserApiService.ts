@@ -147,7 +147,7 @@ export interface Service {
 
     /**
      * Group ID of the service, if applicable
-     * @nullable true
+     * @nullable
      * @example 456
      */
     groupId: number | null;
@@ -209,28 +209,28 @@ export interface Service {
 
     /**
      * Username associated with the service
-     * @nullable true
+     * @nullable
      * @example "user123"
      */
     username: string | null;
 
     /**
      * Password associated with the service
-     * @nullable true
+     * @nullable
      * @example "securepassword123"
      */
     password: string | null;
 
     /**
      * VPS ID if applicable, otherwise null
-     * @nullable true
+     * @nullable
      * @example 12345
      */
     vpsId: number | null;
 
     /**
      * Dedicated server ID if applicable, otherwise null
-     * @nullable true
+     * @nullable
      * @example "s100"
      */
     dedicatedId: string | null;
@@ -261,7 +261,7 @@ export interface Service {
 
     /**
      * Location code of the dedicated server if applicable, otherwise null
-     * @nullable true
+     * @nullable
      * @example "FRA-01"
      */
     dedicatedServerLocation: 'FRA-01' | 'FRA-02' | 'FRA-03' | null;
@@ -285,7 +285,7 @@ export interface Service {
 
     /**
      * Team ID if the service is associated with a team, otherwise null
-     * @nullable true
+     * @nullable
      * @example 789
      */
     teamId: number | null;
@@ -446,7 +446,7 @@ export interface User {
 
     /**
      * User's company name, if applicable
-     * @nullable true
+     * @nullable
      * @example "Example Corp"
      */
     companyName: string | null;
@@ -483,7 +483,7 @@ export interface TicketMessageAuthor {
     /**
      * URL of the author's avatar
      * @format uri
-     * @nullable true
+     * @nullable
      * @example "https://example.com/avatar.jpg"
      */
     avatar: string | null;
@@ -658,7 +658,7 @@ export interface Invoice {
     /**
      * Unix timestamp of the invoice payment date, null if not paid
      * @format date-time
-     * @nullable true
+     * @nullable
      * @example 1700000000000
      */
     datePaid: number | null;

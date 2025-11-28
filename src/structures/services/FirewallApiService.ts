@@ -126,7 +126,7 @@ export interface FirewallAttackLog {
     /**
      * Timestamp when the attack ended, null if ongoing.
      * @example 1700000000000
-     * @nullable true
+     * @nullable
      */
     endedAt: number | null;
 
@@ -156,7 +156,7 @@ export interface AttackNotificationSettings {
     /**
      * Discord webhook URL for attack notifications.
      * @example "https://discord.com/api/webhooks/123456789012345678/abcdefghijklmnopqrstuvwxyz"
-     * @nullable true
+     * @nullable
      */
     discordWebhookURL: string | null;
 }
