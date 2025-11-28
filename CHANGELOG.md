@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v2.0.3
+
+[compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.2...v2.0.3)
+
+### 🚀 Enhancements
+
+- Latest api changes ([e7b7810](https://github.com/nodestycom/node-api-client/commit/e7b7810))
+
+### 🩹 Fixes
+
+- Add missing nullable jsdocs ([a45fc55](https://github.com/nodestycom/node-api-client/commit/a45fc55))
+- Update jsdoc nullable annotations for consistency ([fbfe60e](https://github.com/nodestycom/node-api-client/commit/fbfe60e))
+
+### ❤️ Contributors
+
+- Hanzydev <contact@hanzy.dev>
+
 ## v2.0.2
 
 [compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.1...v2.0.2)
