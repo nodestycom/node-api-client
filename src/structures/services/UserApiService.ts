@@ -252,22 +252,17 @@ export interface Service {
     isDedicated: boolean;
 
     /**
-     * Indicates if the dedicated server is from Hetzner
-     * @example true
-     */
-    isHetznerDedicated: boolean;
-
-    /**
-     * Indicates if the dedicated server is from Skylink
-     * @example false
-     */
-    isSkyLinkDedicated: boolean;
-
-    /**
      * Indicates if the service is mail hosting
      * @example false
      */
     isMailHosting: boolean;
+
+    /**
+     * Location code of the dedicated server if applicable, otherwise null
+     * @nullable true
+     * @example "FRA-01"
+     */
+    dedicatedServerLocation: 'FRA-01' | 'FRA-02' | 'FRA-03' | null;
 
     /**
      * List of addons associated with the service
