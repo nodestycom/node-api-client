@@ -264,7 +264,7 @@ export interface Service {
      * @nullable
      * @example "FRA-01"
      */
-    dedicatedServerLocation: 'FRA-01' | 'FRA-02' | 'FRA-03' | null;
+    dedicatedServerLocation: 'FRA-01' | 'FRA-02' | 'FRA-03' | 'USA-01' | null;
 
     /**
      * List of addons associated with the service
