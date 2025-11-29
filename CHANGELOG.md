@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v2.0.4
+
+[compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.3...v2.0.4)
+
+### 🚀 Enhancements
+
+- Latest api changes ([3e6b85b](https://github.com/nodestycom/node-api-client/commit/3e6b85b))
+
+### ❤️ Contributors
+
+- Hanzydev <contact@hanzy.dev>
+
 ## v2.0.3
 
 [compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.2...v2.0.3)
