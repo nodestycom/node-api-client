@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [3.0.0](https://github.com/nodestycom/node-api-client/compare/v2.0.4...v3.0.0) (2026-07-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** replace manual client with generated SDK
+
+### Features
+
+* **api:** replace manual client with generated SDK ([0429ccf](https://github.com/nodestycom/node-api-client/commit/0429ccf75a66714ac9e35fcb269ce4b4f47405c5))
+
 ## v2.0.4
 
 [compare changes](https://github.com/nodestycom/node-api-client/compare/v2.0.3...v2.0.4)
@@ -91,4 +102,3 @@
 ### ❤️ Contributors
 
 - Hanzydev <contact@hanzy.dev>
-
