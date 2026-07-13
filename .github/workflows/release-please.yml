@@ -1,0 +1,53 @@
+name: release-please
+
+on:
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: write
+    pull-requests: write
+    id-token: write
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - id: release
+              uses: googleapis/release-please-action@v4
+              with:
+                  config-file: release-please-config.json
+                  manifest-file: .release-please-manifest.json
+
+            - if: ${{ steps.release.outputs.release_created }}
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ steps.release.outputs.tag_name }}
+
+            - if: ${{ steps.release.outputs.release_created }}
+              uses: pnpm/action-setup@v4
+
+            - if: ${{ steps.release.outputs.release_created }}
+              name: Use Node.js 22
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: pnpm
+                  registry-url: https://registry.npmjs.org
+
+            - if: ${{ steps.release.outputs.release_created }}
+              name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - if: ${{ steps.release.outputs.release_created }}
+              name: Verify package
+              run: pnpm check
+
+            - if: ${{ steps.release.outputs.release_created }}
+              name: Install OIDC-capable npm CLI
+              run: npm install --global npm@11.5.1
+
+            - if: ${{ steps.release.outputs.release_created }}
+              name: Publish to npm with provenance
+              run: npm publish --access public --provenance

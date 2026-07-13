@@ -1,18 +1,32 @@
 {
     "name": "@nodesty/api-client",
     "version": "2.0.4",
-    "description": "A powerful API client for Nodesty.",
+    "description": "Generated, type-safe Node.js client for the Nodesty API.",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "sideEffects": false,
     "files": [
         "dist"
     ],
     "scripts": {
         "build": "tsdown",
+        "generate:spec": "node scripts/normalize-openapi.mjs",
+        "generate:client": "openapi-ts --file openapi-ts.config.ts && node scripts/generate-facade.mjs",
+        "generate": "pnpm generate:spec && pnpm generate:client",
+        "generate:check": "pnpm generate:client && git diff --exit-code -- src/generated",
         "lint": "prettier --check . && eslint .",
         "lint:fix": "prettier --write . && eslint . --fix",
-        "release": "changelogen --release",
-        "check": "pnpm build && pnpm lint"
+        "typecheck": "tsc --noEmit",
+        "test": "pnpm build && node --test tests/*.test.mjs",
+        "prepack": "pnpm build",
+        "check": "pnpm generate:check && pnpm lint && pnpm typecheck && pnpm test"
     },
     "repository": {
         "type": "git",
@@ -31,13 +45,10 @@
         "url": "https://github.com/nodestycom/node-api-client/issues"
     },
     "homepage": "https://github.com/nodestycom/node-api-client#readme",
-    "dependencies": {
-        "defu": "^6.1.4",
-        "ofetch": "^1.4.1"
-    },
     "devDependencies": {
         "@eslint/js": "^9.30.0",
-        "changelogen": "^0.6.2",
+        "@hey-api/openapi-ts": "0.82.5",
+        "@types/node": "^20.19.43",
         "eslint": "^9.30.0",
         "eslint-config-prettier": "^10.1.5",
         "eslint-plugin-prettier": "^5.5.3",
@@ -48,6 +59,9 @@
         "typescript-eslint": "^8.37.0"
     },
     "type": "module",
+    "engines": {
+        "node": ">=18.18.0"
+    },
     "packageManager": "pnpm@10.13.1",
     "publishConfig": {
         "access": "public"

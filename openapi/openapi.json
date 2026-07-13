@@ -1,0 +1,3264 @@
+{
+    "components": {
+        "securitySchemes": {
+            "personalAccessToken": {
+                "description": "Nodesty Personal Access Token, sent as `PAT <token>`.",
+                "in": "header",
+                "name": "Authorization",
+                "type": "apiKey"
+            }
+        }
+    },
+    "info": {
+        "description": "API Documentation for Nodesty.",
+        "title": "API Docs | Nodesty",
+        "version": "latest"
+    },
+    "openapi": "3.1.0",
+    "paths": {
+        "/api/help-requests": {
+            "get": {
+                "description": "Get the current user help requests",
+                "operationId": "userGetHelpRequests",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the help request",
+                                                "example": "1",
+                                                "type": "string"
+                                            },
+                                            "lastReply": {
+                                                "description": "Timestamp of the last reply to the help request",
+                                                "example": "2023-10-01T12:00:00Z",
+                                                "format": "date-time",
+                                                "type": "string"
+                                            },
+                                            "marked": {
+                                                "default": false,
+                                                "description": "Indicates if the help request is marked as important",
+                                                "example": true,
+                                                "type": "boolean"
+                                            },
+                                            "priority": {
+                                                "description": "Priority level of the help request",
+                                                "example": "HIGH",
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "description": "Current status of the help request",
+                                                "example": "OPEN",
+                                                "type": "string"
+                                            },
+                                            "subject": {
+                                                "description": "Subject of the help request",
+                                                "example": "Issue with my VPS",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of help requests for the current user"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Help Requests",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/help-requests/{id}": {
+            "get": {
+                "description": "Get the current user help request by ID",
+                "operationId": "userGetHelpRequest",
+                "parameters": [
+                    {
+                        "description": "Help Request ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Unique identifier for the help request",
+                                            "example": "1",
+                                            "type": "string"
+                                        },
+                                        "lastReply": {
+                                            "description": "Timestamp of the last reply to the help request",
+                                            "example": "2023-10-01T12:00:00Z",
+                                            "format": "date-time",
+                                            "type": "string"
+                                        },
+                                        "marked": {
+                                            "default": false,
+                                            "description": "Indicates if the help request is marked as important",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "messages": {
+                                            "description": "List of messages associated with the help request",
+                                            "items": {
+                                                "properties": {
+                                                    "attachments": {
+                                                        "items": { "type": "string" },
+                                                        "type": "array"
+                                                    },
+                                                    "content": {
+                                                        "description": "Content of the message",
+                                                        "example": "This is a message content",
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "description": "Unique identifier for the message",
+                                                        "example": "1",
+                                                        "type": "string"
+                                                    },
+                                                    "messageId": {
+                                                        "description": "Message ID for tracking purposes",
+                                                        "example": "346534763346",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "priority": {
+                                            "description": "Priority level of the help request",
+                                            "example": "HIGH",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "Current status of the help request",
+                                            "example": "OPEN",
+                                            "type": "string"
+                                        },
+                                        "subject": {
+                                            "description": "Subject of the help request",
+                                            "example": "Issue with my VPS",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Help request details for the specified ID"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Help Request",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/services": {
+            "get": {
+                "description": "Get the current user services",
+                "operationId": "userGetServices",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "addons": {
+                                            "description": "List of addons associated with the service",
+                                            "items": {
+                                                "properties": {
+                                                    "billingCycle": {
+                                                        "description": "Billing cycle for the addon",
+                                                        "enum": [
+                                                            "Monthly",
+                                                            "Quarterly",
+                                                            "Semi-Annually",
+                                                            "Annually",
+                                                            "Biennially",
+                                                            "Triennially"
+                                                        ],
+                                                        "example": "Monthly",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Name of the addon",
+                                                        "example": "2x IPv4 Addresses",
+                                                        "type": "string"
+                                                    },
+                                                    "nextDueDate": {
+                                                        "description": "Unix timestamp of the next due date for the addon",
+                                                        "example": 1704067200000,
+                                                        "format": "date-time",
+                                                        "type": "integer"
+                                                    },
+                                                    "recurringAmount": {
+                                                        "description": "Recurring amount for the addon",
+                                                        "example": 10,
+                                                        "type": "number"
+                                                    },
+                                                    "registerDate": {
+                                                        "description": "Unix timestamp of the registration date for the addon",
+                                                        "example": 1704067200000,
+                                                        "format": "date-time",
+                                                        "type": "integer"
+                                                    },
+                                                    "status": {
+                                                        "description": "Current status of the addon",
+                                                        "enum": [
+                                                            "Pending",
+                                                            "Active",
+                                                            "Suspended",
+                                                            "Terminated",
+                                                            "Completed",
+                                                            "Cancelled",
+                                                            "Fraud"
+                                                        ],
+                                                        "example": "Active",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "billingCycle": {
+                                            "description": "Billing cycle for the service",
+                                            "enum": [
+                                                "Monthly",
+                                                "Quarterly",
+                                                "Semi-Annually",
+                                                "Annually",
+                                                "Biennially",
+                                                "Triennially"
+                                            ],
+                                            "example": "Monthly",
+                                            "type": "string"
+                                        },
+                                        "dedicatedId": {
+                                            "description": "Dedicated server ID if applicable, otherwise null",
+                                            "example": ["s100", "28572"],
+                                            "type": ["string", "null"]
+                                        },
+                                        "dedicatedServerLocation": {
+                                            "description": "Location code of the dedicated server if applicable, otherwise null",
+                                            "enum": ["FRA", "USA"],
+                                            "example": "FRA",
+                                            "type": ["string", "null"]
+                                        },
+                                        "domain": {
+                                            "description": "Domain associated with the service",
+                                            "example": "abcdefgh.nodesty.com",
+                                            "type": "string"
+                                        },
+                                        "features": {
+                                            "description": "List of features associated with the service",
+                                            "example": [
+                                                "Unlimited Bandwidth",
+                                                "24/7 Support",
+                                                "Free SSL Certificate"
+                                            ],
+                                            "items": { "type": "string" },
+                                            "type": "array"
+                                        },
+                                        "firstPaymentAmount": {
+                                            "description": "Amount charged for the first payment",
+                                            "example": 100,
+                                            "type": "number"
+                                        },
+                                        "groupId": {
+                                            "description": "Group ID of the service, if applicable",
+                                            "example": 456,
+                                            "nullable": true,
+                                            "type": "integer"
+                                        },
+                                        "id": {
+                                            "description": "Unique identifier for the service",
+                                            "example": 1,
+                                            "type": "integer"
+                                        },
+                                        "ips": {
+                                            "description": "List of IP addresses associated with the service",
+                                            "example": ["192.168.1.1", "192.168.1.2"],
+                                            "items": { "type": "string" },
+                                            "type": "array"
+                                        },
+                                        "isDedicated": {
+                                            "description": "Indicates if the service is a dedicated server",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "isMailHosting": {
+                                            "description": "Indicates if the service is mail hosting",
+                                            "example": false,
+                                            "type": "boolean"
+                                        },
+                                        "isVPS": {
+                                            "description": "Indicates if the service is a Virtual Server",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "isWebHosting": {
+                                            "description": "Indicates if the service is web hosting",
+                                            "example": false,
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "description": "Name of the service",
+                                            "example": "Dedicated Server - i7-7700",
+                                            "type": "string"
+                                        },
+                                        "nameWithoutGroupName": {
+                                            "description": "Name of the service without the group name prefix",
+                                            "example": "i7-7700",
+                                            "type": "string"
+                                        },
+                                        "nextDueDate": {
+                                            "description": "Unix timestamp of the next due date for payment",
+                                            "example": 1704067200000,
+                                            "format": "date-time",
+                                            "type": "integer"
+                                        },
+                                        "owner": {
+                                            "description": "Indicates if the current user is the owner of the service",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "password": {
+                                            "description": "Password associated with the service",
+                                            "example": "securepassword123",
+                                            "nullable": true,
+                                            "type": "string"
+                                        },
+                                        "productId": {
+                                            "description": "Product ID associated with the service",
+                                            "example": 123,
+                                            "type": "integer"
+                                        },
+                                        "rawName": {
+                                            "description": "Raw name of the service without any modifications",
+                                            "example": "Dedicated Server - i7-7700",
+                                            "type": "string"
+                                        },
+                                        "recurringAmount": {
+                                            "description": "Recurring amount charged for the service",
+                                            "example": 50,
+                                            "type": "number"
+                                        },
+                                        "status": {
+                                            "description": "Current status of the service",
+                                            "enum": [
+                                                "Pending",
+                                                "Active",
+                                                "Suspended",
+                                                "Terminated",
+                                                "Completed",
+                                                "Cancelled",
+                                                "Fraud"
+                                            ],
+                                            "example": "Active",
+                                            "type": "string"
+                                        },
+                                        "suspensionReason": {
+                                            "description": "Suspension reason if the service is suspended, otherwise null",
+                                            "example": "Abuse report #1234",
+                                            "type": ["string", "null"]
+                                        },
+                                        "teamId": {
+                                            "description": "Team ID if the service is associated with a team, otherwise null",
+                                            "example": 789,
+                                            "type": ["number", "null"]
+                                        },
+                                        "username": {
+                                            "description": "Username associated with the service",
+                                            "example": "user123",
+                                            "nullable": true,
+                                            "type": "string"
+                                        },
+                                        "vpsId": {
+                                            "description": "VPS ID if applicable, otherwise null",
+                                            "example": 12345,
+                                            "type": ["number", "null"]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of services for the current user"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Services",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/dedicated/action": {
+            "parameters": [],
+            "post": {
+                "description": "Perform an action on a dedicated server",
+                "operationId": "dedicatedServerPerformAction",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "action": {
+                                        "description": "Action to perform on the dedicated server",
+                                        "enum": ["setPowerOff", "setPowerOn", "setPowerReset"],
+                                        "example": "setPowerOn",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["action"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Action to perform on the dedicated server",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "Action executed successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Perform Action",
+                "tags": ["Dedicated Server"]
+            }
+        },
+        "/api/services/{id}/dedicated/hardware": {
+            "get": {
+                "description": "Retrieve hardware components of a dedicated server",
+                "operationId": "dedicatedServerGetHardwareComponents",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "component": {
+                                                "description": "Hardware component name",
+                                                "example": "CPU Model",
+                                                "type": "string"
+                                            },
+                                            "model": {
+                                                "description": "Model of the hardware component",
+                                                "example": "AMD Ryzen 9 9950X",
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "description": "Value of the hardware component",
+                                                "example": 5000,
+                                                "type": "integer"
+                                            },
+                                            "valueSuffix": {
+                                                "description": "Unit of the value",
+                                                "example": " MHz",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of hardware components for the dedicated server"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Hardware Components",
+                "tags": ["Dedicated Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/dedicated/info": {
+            "get": {
+                "description": "Get information about a dedicated server",
+                "operationId": "dedicatedServerGetInformation",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "availableActions": {
+                                            "description": "List of available actions for the dedicated server",
+                                            "items": {
+                                                "enum": [
+                                                    "setPowerOn",
+                                                    "setPowerOff",
+                                                    "setPowerReset"
+                                                ],
+                                                "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "cpu": {
+                                            "properties": {
+                                                "cores": {
+                                                    "description": "Number of CPU cores",
+                                                    "example": 16,
+                                                    "type": "integer"
+                                                },
+                                                "model": {
+                                                    "description": "Model of the CPU",
+                                                    "example": "AMD Ryzen 9 5950X",
+                                                    "type": "string"
+                                                },
+                                                "speed": {
+                                                    "description": "Base speed of the CPU in MHz",
+                                                    "example": 3500,
+                                                    "type": "integer"
+                                                },
+                                                "threads": {
+                                                    "description": "Number of CPU threads",
+                                                    "example": 32,
+                                                    "type": "integer"
+                                                },
+                                                "turboSpeed": {
+                                                    "description": "Turbo speed of the CPU in MHz",
+                                                    "example": 4900,
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "dedicatedId": {
+                                            "description": "Unique identifier for the dedicated server",
+                                            "example": "1",
+                                            "type": "string"
+                                        },
+                                        "disk": {
+                                            "description": "Total disk space in GB",
+                                            "example": 1000,
+                                            "type": "integer"
+                                        },
+                                        "mainboard": {
+                                            "description": "Model of the mainboard",
+                                            "example": "ASUS ROG Strix X570-E Gaming",
+                                            "type": "string"
+                                        },
+                                        "ram": {
+                                            "description": "Amount of RAM in GB",
+                                            "example": 128,
+                                            "type": "integer"
+                                        },
+                                        "status": {
+                                            "description": "Current status of the dedicated server",
+                                            "example": true,
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Information about the dedicated server"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Information",
+                "tags": ["Dedicated Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/dedicated/os-templates": {
+            "get": {
+                "description": "Get available OS templates for a dedicated server",
+                "operationId": "dedicatedServerGetOSTemplates",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "OS version ID",
+                                                "example": 1,
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "OS version name",
+                                                "example": "Debian 9.5",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of available OS templates"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get OS Templates",
+                "tags": ["Dedicated Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/dedicated/reinstall": {
+            "parameters": [],
+            "post": {
+                "description": "Reinstall a dedicated server with a new OS",
+                "operationId": "dedicatedServerReinstall",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "osId": {
+                                        "description": "ID of the new OS to install",
+                                        "example": 1,
+                                        "type": "integer"
+                                    },
+                                    "password": {
+                                        "description": "New root password for the dedicated server",
+                                        "example": "StrongPassword123!",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["password", "osId"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Reinstall dedicated server with a new OS",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "VPS reinstallation initiated successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Reinstall",
+                "tags": ["Dedicated Server"]
+            }
+        },
+        "/api/services/{id}/dedicated/reinstall-status": {
+            "get": {
+                "description": "Get dedicated server reinstall status",
+                "operationId": "dedicatedServerGetReinstallStatus",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "completed": {
+                                            "description": "Whether the reinstall process is completed",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "step": {
+                                            "description": "Current step of the reinstall process",
+                                            "enum": [1, 2, 3],
+                                            "example": 1,
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server reinstall status"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Reinstall Status",
+                "tags": ["Dedicated Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/dedicated/tasks": {
+            "get": {
+                "description": "Get dedicated server tasks",
+                "operationId": "dedicatedServerGetTasks",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "action": {
+                                                "description": "Description of the task action",
+                                                "example": "Server reboot initiated",
+                                                "type": "string"
+                                            },
+                                            "startedAt": {
+                                                "description": "Unix timestamp when the task started",
+                                                "example": 1625251200000,
+                                                "type": "integer"
+                                            },
+                                            "updatedAt": {
+                                                "description": "Unix timestamp when the task was last updated",
+                                                "example": 1625254800000,
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of dedicated server tasks"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Dedicated server not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Tasks",
+                "tags": ["Dedicated Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/firewall/{ip}/attack-logs": {
+            "get": {
+                "description": "Get nShield statistics for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallGetAttackLogs",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "endedAt": {
+                                                "description": "Timestamp when the attack ended, null if ongoing",
+                                                "example": 1700000000000,
+                                                "nullable": true,
+                                                "type": "integer"
+                                            },
+                                            "peak": {
+                                                "description": "Peak traffic during the attack",
+                                                "example": 449455557,
+                                                "type": "integer"
+                                            },
+                                            "startedAt": {
+                                                "description": "Timestamp when the attack started",
+                                                "example": 1700000000000,
+                                                "type": "integer"
+                                            },
+                                            "vectors": {
+                                                "description": "List of attack vectors used during the attack",
+                                                "example": ["TCP_SYN", "ICMP"],
+                                                "items": {
+                                                    "description": "Type of attack vector (e.g., TCP_SYN, ICMP, UDP)",
+                                                    "type": "string"
+                                                },
+                                                "type": "array"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of attack logs for the specified IP address"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Attack Logs",
+                "tags": ["Firewall"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/firewall/{ip}/attack-notification": {
+            "get": {
+                "description": "Get attack notification settings for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallGetAttackNotificationSettings",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "discordWebhookURL": {
+                                            "description": "Discord webhook URL for attack notifications",
+                                            "example": "https://discord.com/api/webhooks/123456789012345678/abcdefghijklmnopqrstuvwxyz",
+                                            "nullable": true,
+                                            "type": "string"
+                                        },
+                                        "emailNotification": {
+                                            "description": "Whether email notifications are enabled for attack alerts",
+                                            "example": true,
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Attack notification settings for the specified service and IP address"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP address not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Attack Notification Settings",
+                "tags": ["Firewall"]
+            },
+            "parameters": [],
+            "put": {
+                "description": "Update attack notification settings for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallUpdateAttackNotificationSettings",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "discordWebhookURL": {
+                                        "description": "Discord webhook URL for attack notifications",
+                                        "example": "https://discord.com/api/webhooks/123456789012345678/abcdefghijklmnopqrstuvwxyz",
+                                        "nullable": true,
+                                        "type": "string"
+                                    },
+                                    "emailNotification": {
+                                        "description": "Whether email notifications are enabled",
+                                        "example": true,
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": [],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Attack notification settings to update"
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "discordWebhookURL": {
+                                            "description": "Discord webhook URL for attack notifications",
+                                            "example": "https://discord.com/api/webhooks/123456789012345678/abcdefghijklmnopqrstuvwxyz",
+                                            "type": "string"
+                                        },
+                                        "emailNotification": {
+                                            "description": "Whether email notifications are enabled",
+                                            "example": true,
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Attack notification settings updated successfully"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP address not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Update Attack Notification Settings",
+                "tags": ["Firewall"]
+            }
+        },
+        "/api/services/{id}/firewall/{ip}/rdns": {
+            "delete": {
+                "description": "Reset reverse DNS (rDNS) for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallResetReverseDNS",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Reverse DNS (rDNS) set successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service, IP address, or reverse DNS (rDNS) not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Reset Reverse DNS",
+                "tags": ["Firewall"]
+            },
+            "get": {
+                "description": "Get reverse DNS (rDNS) for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallGetReverseDNS",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "rdns": {
+                                            "description": "Reverse DNS entry for the IP address",
+                                            "example": "example.domain.com",
+                                            "nullable": true,
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Reverse DNS (rDNS) for the specified IP address"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP address not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Reverse DNS",
+                "tags": ["Firewall"]
+            },
+            "parameters": [],
+            "put": {
+                "description": "Set or update reverse DNS (rDNS) for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallUpsertReverseDNS",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "rdns": {
+                                        "description": "Reverse DNS entry to set",
+                                        "example": "example.domain.com",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["rdns"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Reverse DNS entry to set for the IP address",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "Reverse DNS (rDNS) set successfully" },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Invalid Reverse DNS (rDNS)"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP address not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Upsert Reverse DNS",
+                "tags": ["Firewall"]
+            }
+        },
+        "/api/services/{id}/firewall/{ip}/rules": {
+            "get": {
+                "description": "Get nShield rules for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallGetRules",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Rule ID",
+                                                "example": 12345,
+                                                "type": "integer"
+                                            },
+                                            "port": {
+                                                "description": "Port number for the rule",
+                                                "example": 25565,
+                                                "type": "integer"
+                                            },
+                                            "protocol": {
+                                                "description": "Protocol used by the rule",
+                                                "example": "TCP",
+                                                "type": "string"
+                                            },
+                                            "service": {
+                                                "description": "Service associated with the rule",
+                                                "example": "Minecraft",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of nShield rules for the specified service and IP address"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Rules",
+                "tags": ["Firewall"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/firewall/{ip}/rules/{ruleId}": {
+            "delete": {
+                "description": "Delete a nShield rule for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallDeleteRule",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    },
+                    {
+                        "description": "Rule ID",
+                        "in": "path",
+                        "name": "ruleId",
+                        "required": true,
+                        "schema": { "example": "12345", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Rule deleted successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service, IP address, or rule not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Delete Rule",
+                "tags": ["Firewall"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/firewall/{ip}/stats": {
+            "get": {
+                "description": "Get nShield statistics for a specific IP address on a Virtual or Dedicated Server",
+                "operationId": "firewallGetStatistics",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "77.90.14.1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "timestamp": {
+                                                "description": "Unix timestamp of the traffic data",
+                                                "example": 1704067200000,
+                                                "format": "date-time",
+                                                "type": "integer"
+                                            },
+                                            "totalDropTraffic": {
+                                                "description": "Total traffic that was dropped by the nShield",
+                                                "example": "2048576",
+                                                "type": "string"
+                                            },
+                                            "totalPassTraffic": {
+                                                "description": "Total traffic that passed through the nShield",
+                                                "example": "10248576",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "nShield statistics for the specified IP address"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Service or IP not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Statistics",
+                "tags": ["Firewall"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/mail/info": {
+            "get": {
+                "description": "Get information about a mail hosting service",
+                "operationId": "mailHostingGetInformation",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "archiveYears": {
+                                                "properties": {
+                                                    "number": {
+                                                        "description": "Number of archived years",
+                                                        "example": 0,
+                                                        "type": "integer"
+                                                    },
+                                                    "status": {
+                                                        "description": "Status of archived years",
+                                                        "enum": ["enabled", "disabled"],
+                                                        "example": "disabled",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "disk": {
+                                                "properties": {
+                                                    "limit": {
+                                                        "description": "Disk limit in bytes",
+                                                        "example": 524288000,
+                                                        "type": "integer"
+                                                    },
+                                                    "usage": {
+                                                        "description": "Disk usage in bytes",
+                                                        "example": 104857600,
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "dkim": {
+                                                "nullable": true,
+                                                "properties": {
+                                                    "name": {
+                                                        "description": "DKIM record name",
+                                                        "example": "asdDjskladl2184._domainKey",
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "description": "Status of DKIM record verification",
+                                                        "example": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "type": {
+                                                        "description": "DKIM record type",
+                                                        "enum": ["TXT"],
+                                                        "example": "MX",
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "description": "DKIM record value",
+                                                        "example": "mail.example.com.",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "dns": {
+                                                "items": {
+                                                    "properties": {
+                                                        "name": {
+                                                            "description": "DNS record name",
+                                                            "example": "mail.example.com",
+                                                            "type": "string"
+                                                        },
+                                                        "priority": {
+                                                            "description": "DNS record priority",
+                                                            "example": 10,
+                                                            "type": "integer"
+                                                        },
+                                                        "status": {
+                                                            "description": "Status of DNS record verification",
+                                                            "example": true,
+                                                            "type": "boolean"
+                                                        },
+                                                        "type": {
+                                                            "description": "DNS record type",
+                                                            "enum": ["MX", "CNAME", "TXT"],
+                                                            "example": "MX",
+                                                            "type": "string"
+                                                        },
+                                                        "value": {
+                                                            "description": "DNS record value",
+                                                            "example": "mail.example.com.",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "domainAlias": {
+                                                "properties": {
+                                                    "count": {
+                                                        "description": "Number of domain aliases",
+                                                        "example": 2,
+                                                        "type": "integer"
+                                                    },
+                                                    "limit": {
+                                                        "description": "Maximum number of domain aliases",
+                                                        "example": 5,
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "fileStorage": {
+                                                "description": "Indicates if file storage is enabled",
+                                                "example": true,
+                                                "type": "boolean"
+                                            },
+                                            "office": {
+                                                "description": "Indicates if Office integration is enabled",
+                                                "example": true,
+                                                "type": "boolean"
+                                            },
+                                            "spamExperts": {
+                                                "description": "Indicates if SpamExperts is enabled",
+                                                "example": true,
+                                                "type": "boolean"
+                                            },
+                                            "status": {
+                                                "description": "Current status of the mail hosting service",
+                                                "enum": ["active", "pending"],
+                                                "example": "active",
+                                                "type": "string"
+                                            },
+                                            "users": {
+                                                "properties": {
+                                                    "aliasCount": {
+                                                        "description": "Number of user aliases",
+                                                        "example": 5,
+                                                        "type": "integer"
+                                                    },
+                                                    "aliasLimit": {
+                                                        "description": "Maximum number of user aliases",
+                                                        "example": 10,
+                                                        "type": "integer"
+                                                    },
+                                                    "count": {
+                                                        "description": "Number of users",
+                                                        "example": 10,
+                                                        "type": "integer"
+                                                    },
+                                                    "limit": {
+                                                        "description": "Maximum number of users",
+                                                        "example": 20,
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "verified": {
+                                                "properties": {
+                                                    "record": {
+                                                        "description": "Verification TXT record",
+                                                        "example": "b9959b96-4d2a-4e54-b148-2a18f003de90",
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "description": "Verification status",
+                                                        "example": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "type": {
+                                                        "description": "Type of verification record",
+                                                        "enum": ["TXT"],
+                                                        "example": "TXT",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Information about the mail hosting service"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Mail Hosting not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Information",
+                "tags": ["Mail Hosting"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/vps/action": {
+            "parameters": [],
+            "post": {
+                "description": "Perform an action on a Virtual Server",
+                "operationId": "virtualServerPerformAction",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "action": {
+                                        "description": "Action to perform on the VPS",
+                                        "enum": ["start", "shutdown", "reset", "stop"],
+                                        "example": "start",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["action"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Action to perform on the VPS",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "Action executed successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Perform Action",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/backups": {
+            "get": {
+                "description": "Get VPS backups",
+                "operationId": "virtualServerGetBackups",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "createdAt": {
+                                                "description": "Unix timestamp when the backup was created",
+                                                "example": 1754763101000,
+                                                "type": "integer"
+                                            },
+                                            "file": {
+                                                "description": "Name of the backup file",
+                                                "example": "backup-pool:backup/vm/2702/2025-08-09T18:11:41Z",
+                                                "type": "string"
+                                            },
+                                            "notes": {
+                                                "description": "Notes about the backup",
+                                                "example": "Backup created before major update",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of VPS backups"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Backups",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": [],
+            "post": {
+                "description": "Create a new backup for the VPS",
+                "operationId": "virtualServerCreateBackup",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "VPS backup request received and is being processed" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Create Backup",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/backups/{file}": {
+            "parameters": [],
+            "patch": {
+                "description": "Update a backup for the VPS",
+                "operationId": "virtualServerUpdateBackup",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "in": "path",
+                        "name": "file",
+                        "required": true,
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "locked": {
+                                        "description": "Whether the backup is locked",
+                                        "example": true,
+                                        "type": "boolean"
+                                    },
+                                    "notes": {
+                                        "description": "Notes about the backup",
+                                        "example": "Backup created before major update",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Backup update request"
+                },
+                "responses": {
+                    "204": { "description": "Backup updated successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Update Backup",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/backups/{file}/restore": {
+            "parameters": [],
+            "post": {
+                "description": "Restore a backup for the VPS",
+                "operationId": "virtualServerRestoreBackup",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "in": "path",
+                        "name": "file",
+                        "required": true,
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "VPS backup restore initiated successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Restore Backup",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/backups/daily-backups": {
+            "parameters": [],
+            "put": {
+                "description": "Change the daily backup status of a Virtual Server",
+                "operationId": "virtualServerChangeDailyBackupStatus",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "enabled": {
+                                        "description": "Whether daily backups are enabled",
+                                        "example": true,
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": ["enabled"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Daily backup configuration",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "Daily backup status changed successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Change Daily Backup Status",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/change-password": {
+            "parameters": [],
+            "post": {
+                "description": "Change the password of a Virtual Server",
+                "operationId": "virtualServerChangePassword",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "password": {
+                                        "description": "New password for the VPS",
+                                        "example": "StrongPassword123!",
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "description": "User whose password will be changed",
+                                        "example": "Administrator",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["username", "password"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Change the password of a Virtual Server",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "Password changed successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Change Password",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/graphs": {
+            "get": {
+                "description": "Get VPS usage statistics graphs",
+                "operationId": "virtualServerGetGraphs",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "cpuUsage": {
+                                                "description": "CPU usage in percentage",
+                                                "example": 12.34,
+                                                "type": "integer"
+                                            },
+                                            "diskRead": {
+                                                "description": "Disk read in bytes",
+                                                "example": 12345,
+                                                "type": "integer"
+                                            },
+                                            "diskWrite": {
+                                                "description": "Disk write in bytes",
+                                                "example": 12345,
+                                                "type": "integer"
+                                            },
+                                            "netIn": {
+                                                "description": "Network inbound traffic in bytes",
+                                                "example": 12345,
+                                                "type": "integer"
+                                            },
+                                            "netOut": {
+                                                "description": "Network outbound traffic in bytes",
+                                                "example": 12345,
+                                                "type": "integer"
+                                            },
+                                            "ramUsage": {
+                                                "description": "RAM usage in bytes",
+                                                "example": 12345,
+                                                "type": "integer"
+                                            },
+                                            "timestamp": {
+                                                "description": "Unix timestamp of the data",
+                                                "example": 1704067200000,
+                                                "format": "date-time",
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "VPS usage statistics graphs"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Graphs",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/vps/info": {
+            "get": {
+                "description": "Get information about a Virtual Server",
+                "operationId": "virtualServerGetInformation",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "cpu": {
+                                            "properties": {
+                                                "cores": {
+                                                    "description": "Number of CPU cores assigned to the VPS",
+                                                    "example": 4,
+                                                    "type": "integer"
+                                                },
+                                                "percent": {
+                                                    "description": "CPU usage percentage",
+                                                    "example": 75.5,
+                                                    "format": "float",
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "disk": {
+                                            "description": "Total disk space in bytes",
+                                            "example": 10737418240,
+                                            "type": "integer"
+                                        },
+                                        "hostname": {
+                                            "description": "Hostname of the VPS",
+                                            "example": "vps.example.com",
+                                            "type": "string"
+                                        },
+                                        "ips": {
+                                            "items": {
+                                                "description": "IP addresses assigned to the VPS",
+                                                "example": "192.168.1.100",
+                                                "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "os": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "ID of the operating system",
+                                                    "example": "debian",
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "description": "Name of the operating system",
+                                                    "example": "Debian GNU/Linux 12 (bookworm)",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "proxmoxId": {
+                                            "description": "Proxmox ID of the VPS",
+                                            "example": 67890,
+                                            "type": "integer"
+                                        },
+                                        "ram": {
+                                            "properties": {
+                                                "free": {
+                                                    "description": "Free RAM in bytes",
+                                                    "example": 1073741824,
+                                                    "type": "integer"
+                                                },
+                                                "limit": {
+                                                    "description": "RAM limit in bytes",
+                                                    "example": 2147483648,
+                                                    "type": "integer"
+                                                },
+                                                "percent": {
+                                                    "description": "Percentage of used RAM",
+                                                    "example": 50,
+                                                    "format": "float",
+                                                    "type": "number"
+                                                },
+                                                "used": {
+                                                    "description": "Used RAM in bytes",
+                                                    "example": 1073741824,
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "description": "Current status of the VPS (true for active, false for inactive)",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "vpsId": {
+                                            "description": "Unique identifier for the VPS",
+                                            "example": 12345,
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Information about the VPS"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Information",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/vps/os-templates": {
+            "get": {
+                "description": "Get available OS templates for a Virtual Server",
+                "operationId": "virtualServerGetOSTemplates",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "OS version ID",
+                                                "example": 1,
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "OS version name",
+                                                "example": "Debian 9.5",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of available OS templates"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get OS Templates",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": []
+        },
+        "/api/services/{id}/vps/reinstall": {
+            "parameters": [],
+            "post": {
+                "description": "Reinstall a Virtual Server with a new OS",
+                "operationId": "virtualServerReinstall",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "osId": {
+                                        "description": "ID of the new OS to install",
+                                        "example": 1,
+                                        "type": "integer"
+                                    },
+                                    "password": {
+                                        "description": "New root password for the VPS",
+                                        "example": "StrongPassword123!",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["password", "osId"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "description": "Reinstall VPS with a new OS",
+                    "required": true
+                },
+                "responses": {
+                    "204": { "description": "VPS reinstallation initiated successfully" },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Reinstall",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/tasks": {
+            "get": {
+                "description": "Get VPS tasks",
+                "operationId": "virtualServerGetTasks",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "action": {
+                                                "description": "Action of the task",
+                                                "example": "qmshutdown",
+                                                "type": "string"
+                                            },
+                                            "endedAt": {
+                                                "description": "Unix timestamp when the task ended or null if not ended",
+                                                "example": 1625254800000,
+                                                "nullable": true,
+                                                "type": "integer"
+                                            },
+                                            "startedAt": {
+                                                "description": "Unix timestamp when the task started",
+                                                "example": 1625251200000,
+                                                "type": "integer"
+                                            },
+                                            "status": {
+                                                "description": "Status of the task",
+                                                "example": "OK",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of VPS tasks"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "VPS not found"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Tasks",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": []
+        },
+        "/api/store/{groupId}": {
+            "get": {
+                "description": "Get all products by group ID",
+                "operationId": "billingGetProductsByGroupID",
+                "parameters": [
+                    {
+                        "description": "Group ID",
+                        "in": "path",
+                        "name": "groupId",
+                        "required": true,
+                        "schema": { "example": "14", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "features": {
+                                                "description": "Product features",
+                                                "items": { "type": "string" },
+                                                "type": "array"
+                                            },
+                                            "groupId": {
+                                                "description": "Group ID",
+                                                "type": "integer"
+                                            },
+                                            "id": {
+                                                "description": "Product ID",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Product name",
+                                                "type": "string"
+                                            },
+                                            "options": {
+                                                "description": "Product options",
+                                                "items": { "type": "object" },
+                                                "type": "array"
+                                            },
+                                            "pricing": {
+                                                "description": "Product pricing",
+                                                "type": "object"
+                                            },
+                                            "stockControl": {
+                                                "description": "Stock control",
+                                                "type": "boolean"
+                                            },
+                                            "stockLevel": {
+                                                "description": "Stock level",
+                                                "type": "integer"
+                                            },
+                                            "type": {
+                                                "description": "Product type",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of products in the group"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Products by Group ID",
+                "tags": ["Billing"]
+            },
+            "parameters": []
+        },
+        "/api/store/{groupId}/{productId}/order": {
+            "parameters": [],
+            "post": {
+                "description": "Add a new order",
+                "operationId": "billingAddOrder",
+                "parameters": [
+                    {
+                        "description": "Group ID",
+                        "in": "path",
+                        "name": "groupId",
+                        "required": true,
+                        "schema": { "example": "14", "type": "string" }
+                    },
+                    {
+                        "description": "Product ID",
+                        "in": "path",
+                        "name": "productId",
+                        "required": true,
+                        "schema": { "example": "197", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "billingCycle": {
+                                        "description": "Billing cycle",
+                                        "enum": [
+                                            "Monthly",
+                                            "Quarterly",
+                                            "Semi-Annually",
+                                            "Annually"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "domain": {
+                                        "description": "Domain name for the web/mail hosting order",
+                                        "example": "example.com",
+                                        "nullable": true,
+                                        "type": "string"
+                                    },
+                                    "options": {
+                                        "additionalProperties": {
+                                            "description": "Config option value",
+                                            "type": "number"
+                                        },
+                                        "description": "Configuration options",
+                                        "example": { "10": 80 },
+                                        "nullable": true,
+                                        "type": "object"
+                                    },
+                                    "promoCode": {
+                                        "description": "Promo code",
+                                        "example": "PROMOCODE",
+                                        "nullable": true,
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "invoiceId": {
+                                            "description": "Invoice ID for the new order",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "The new invoice ID"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Add Order",
+                "tags": ["Billing"]
+            }
+        },
+        "/api/store/groups": {
+            "get": {
+                "description": "Get all products groups",
+                "operationId": "billingGetStoreGroups",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Group ID",
+                                                "example": 14,
+                                                "type": "number"
+                                            },
+                                            "name": {
+                                                "description": "Group Name",
+                                                "example": "Sanal Sunucu (Ryzen 9 9950x)",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Store Groups"
+                    }
+                },
+                "security": [],
+                "summary": "Get Store Groups",
+                "tags": ["Billing"]
+            },
+            "parameters": []
+        },
+        "/api/users/@me": {
+            "get": {
+                "description": "Get the current user information",
+                "operationId": "userGetCurrentUser",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "address": {
+                                            "description": "User's address",
+                                            "example": "123 Main St",
+                                            "type": "string"
+                                        },
+                                        "banStatus": {
+                                            "description": "The ban status of the user",
+                                            "enum": [
+                                                "BANNED_AND_CANNOT_CREATE_TICKETS",
+                                                "BANNED_BUT_CAN_CREATE_TICKETS",
+                                                "NOT_BANNED"
+                                            ],
+                                            "example": "NOT_BANNED",
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "description": "User's city",
+                                            "example": "New York",
+                                            "type": "string"
+                                        },
+                                        "companyName": {
+                                            "description": "User's company name, if applicable",
+                                            "example": "Example Corp",
+                                            "nullable": true,
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "description": "User's country",
+                                            "example": "US",
+                                            "type": "string"
+                                        },
+                                        "currency": {
+                                            "description": "User's currency",
+                                            "example": "USD",
+                                            "type": "string"
+                                        },
+                                        "currencySymbol": {
+                                            "description": "Symbol for the user's currency",
+                                            "example": "$",
+                                            "type": "string"
+                                        },
+                                        "currentSessionId": {
+                                            "description": "ID of the user's current session",
+                                            "example": "abcdef123456",
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "description": "User's email address",
+                                            "example": "john.doe@example.com",
+                                            "type": "string"
+                                        },
+                                        "firstName": {
+                                            "description": "User's first name",
+                                            "example": "John",
+                                            "type": "string"
+                                        },
+                                        "fullName": {
+                                            "description": "User's full name",
+                                            "example": "John Doe",
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "description": "Unique identifier for the user",
+                                            "example": "12345",
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "description": "User's last name",
+                                            "example": "Doe",
+                                            "type": "string"
+                                        },
+                                        "phoneNumber": {
+                                            "description": "User's phone number in international format",
+                                            "example": "+1 1234567890",
+                                            "type": "string"
+                                        },
+                                        "postCode": {
+                                            "description": "User's postal code",
+                                            "example": "10001",
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "description": "User's state",
+                                            "example": "NY",
+                                            "type": "string"
+                                        },
+                                        "stats": {
+                                            "description": "User statistics",
+                                            "properties": {
+                                                "activeServices": {
+                                                    "description": "Number of active services for the user",
+                                                    "example": 5,
+                                                    "type": "integer"
+                                                },
+                                                "activeTickets": {
+                                                    "description": "Number of active support tickets for the user",
+                                                    "example": 1,
+                                                    "type": "integer"
+                                                },
+                                                "balance": {
+                                                    "description": "User's account balance",
+                                                    "example": 150.75,
+                                                    "format": "float",
+                                                    "type": "number"
+                                                },
+                                                "unpaidInvoices": {
+                                                    "description": "Number of unpaid invoices for the user",
+                                                    "example": 2,
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "taxId": {
+                                            "description": "User's tax identification number, if applicable",
+                                            "example": "TAX123456",
+                                            "nullable": true,
+                                            "type": "string"
+                                        },
+                                        "totpEnabled": {
+                                            "description": "Whether TOTP (Authentication App) is enabled for the user",
+                                            "example": true,
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Current user information"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Current User",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/users/@me/invoices": {
+            "get": {
+                "description": "Get the current user invoices",
+                "operationId": "userGetInvoices",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "appliedBalance": {
+                                                "description": "Balance applied to the invoice",
+                                                "example": 20,
+                                                "type": "number"
+                                            },
+                                            "date": {
+                                                "description": "Unix timestamp of the invoice creation date",
+                                                "example": 1700000000000,
+                                                "format": "date-time",
+                                                "type": "integer"
+                                            },
+                                            "datePaid": {
+                                                "description": "Unix timestamp of the invoice payment date, null if not paid",
+                                                "example": 1700000000000,
+                                                "format": "date-time",
+                                                "nullable": true,
+                                                "type": "integer"
+                                            },
+                                            "dueDate": {
+                                                "description": "Unix timestamp of the invoice due date",
+                                                "example": 1700000000000,
+                                                "format": "date-time",
+                                                "type": "integer"
+                                            },
+                                            "id": {
+                                                "description": "Unique identifier for the invoice",
+                                                "example": 1,
+                                                "type": "integer"
+                                            },
+                                            "isServiceInvoice": {
+                                                "description": "Whether the invoice is for a service or an add funds invoice",
+                                                "example": true,
+                                                "type": "boolean"
+                                            },
+                                            "status": {
+                                                "description": "Status of the invoice",
+                                                "enum": [
+                                                    "Draft",
+                                                    "Paid",
+                                                    "Unpaid",
+                                                    "Overdue",
+                                                    "Cancelled",
+                                                    "Refunded",
+                                                    "Payment Pending"
+                                                ],
+                                                "example": "Unpaid",
+                                                "type": "string"
+                                            },
+                                            "subTotal": {
+                                                "description": "Subtotal amount of the invoice",
+                                                "example": 100,
+                                                "type": "number"
+                                            },
+                                            "total": {
+                                                "description": "Total amount of the invoice",
+                                                "example": 120,
+                                                "type": "number"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of invoices for current user"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Invoices",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/users/@me/invoices/{id}": {
+            "get": {
+                "description": "Get the current user invoice by ID",
+                "operationId": "userGetInvoice",
+                "parameters": [
+                    {
+                        "description": "Invoice ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "appliedBalance": {
+                                            "description": "Balance applied to the invoice",
+                                            "example": 20,
+                                            "type": "number"
+                                        },
+                                        "date": {
+                                            "description": "Unix timestamp of the invoice creation date",
+                                            "example": 1700000000000,
+                                            "format": "date-time",
+                                            "type": "integer"
+                                        },
+                                        "datePaid": {
+                                            "description": "Unix timestamp of the invoice payment date, null if not paid",
+                                            "example": 1700000000000,
+                                            "format": "date-time",
+                                            "nullable": true,
+                                            "type": "integer"
+                                        },
+                                        "dueDate": {
+                                            "description": "Unix timestamp of the invoice due date",
+                                            "example": 1700000000000,
+                                            "format": "date-time",
+                                            "type": "integer"
+                                        },
+                                        "id": {
+                                            "description": "Unique identifier for the invoice",
+                                            "example": 1,
+                                            "type": "integer"
+                                        },
+                                        "isServiceInvoice": {
+                                            "description": "Whether the invoice is for a service or an add funds invoice",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "items": {
+                                            "description": "List of items in the invoice",
+                                            "items": {
+                                                "properties": {
+                                                    "amount": {
+                                                        "description": "Amount for the invoice item",
+                                                        "example": 10,
+                                                        "type": "number"
+                                                    },
+                                                    "description": {
+                                                        "description": "Description of the invoice item",
+                                                        "example": "Web Hosting Service",
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "description": "Unique identifier for the invoice item",
+                                                        "example": 1,
+                                                        "type": "integer"
+                                                    },
+                                                    "type": {
+                                                        "description": "Type of the invoice item",
+                                                        "example": "Hosting",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "status": {
+                                            "description": "Status of the invoice",
+                                            "enum": [
+                                                "Draft",
+                                                "Paid",
+                                                "Unpaid",
+                                                "Overdue",
+                                                "Cancelled",
+                                                "Refunded",
+                                                "Payment Pending"
+                                            ],
+                                            "example": "Unpaid",
+                                            "type": "string"
+                                        },
+                                        "subTotal": {
+                                            "description": "Subtotal amount of the invoice",
+                                            "example": 100,
+                                            "type": "number"
+                                        },
+                                        "total": {
+                                            "description": "Total amount of the invoice",
+                                            "example": 120,
+                                            "type": "number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Invoice details for the specified ID"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Invoice",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/users/@me/invoices/{id}/pay": {
+            "parameters": [],
+            "post": {
+                "description": "Make a payment for an invoice",
+                "operationId": "billingMakePayment",
+                "parameters": [
+                    {
+                        "description": "Invoice ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "cardId": {
+                                        "description": "Card ID to use for payment. Only available when `paymentMethod` is `CARD` or `FIRST_AVAILABLE` and system balance is insufficient",
+                                        "example": "pm_1234567890",
+                                        "type": "string"
+                                    },
+                                    "paymentMethod": {
+                                        "default": "FIRST_AVAILABLE",
+                                        "enum": ["FIRST_AVAILABLE", "CARD", "BALANCE"],
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [],
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "cardDetails": {
+                                            "description": "Card details used for payment. Only available when `paymentMethodUsed` is `CARD`.",
+                                            "nullable": true,
+                                            "properties": {
+                                                "brand": {
+                                                    "description": "Card brand",
+                                                    "example": "visa",
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "description": "Payment method ID",
+                                                    "example": "pm_1234567890",
+                                                    "type": "string"
+                                                },
+                                                "last4": {
+                                                    "description": "Last 4 digits of card",
+                                                    "example": "4242",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "paymentMethodUsed": {
+                                            "description": "Payment method used",
+                                            "enum": ["CARD", "BALANCE"],
+                                            "example": "CARD",
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "description": "Whether the payment was successful",
+                                            "example": true,
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Payment methods for the user"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": { "message": { "type": "string" } },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Invalid payment method or insufficient balance"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Make Payment",
+                "tags": ["Billing"]
+            }
+        },
+        "/api/users/@me/referral": {
+            "get": {
+                "description": "Get the current user referral code",
+                "operationId": "userGetReferralCode",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "Referral code of the user",
+                                            "example": "cmdvq1hjm000008kvmkkk4gb6",
+                                            "type": "string"
+                                        },
+                                        "uses": {
+                                            "properties": {
+                                                "count": {
+                                                    "description": "Number of times the referral code has been used",
+                                                    "example": 5,
+                                                    "type": "integer"
+                                                },
+                                                "data": {
+                                                    "items": {
+                                                        "properties": {
+                                                            "amount": {
+                                                                "description": "Amount earned from the referral use",
+                                                                "example": 10,
+                                                                "type": "number"
+                                                            },
+                                                            "date": {
+                                                                "description": "Timestamp of when the referral was used",
+                                                                "example": 1700000000000,
+                                                                "type": "integer"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Current user referral code"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Referral Code",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/users/@me/sessions": {
+            "get": {
+                "description": "Get the current user sessions",
+                "operationId": "userGetSessions",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the session",
+                                                "type": "string"
+                                            },
+                                            "ip": {
+                                                "description": "IP address of the session",
+                                                "example": "192.168.1.1",
+                                                "type": "string"
+                                            },
+                                            "lastSeen": {
+                                                "description": "Timestamp of the last time the session was active",
+                                                "example": "2023-10-01T12:00:00Z",
+                                                "format": "date-time",
+                                                "type": "integer"
+                                            },
+                                            "location": {
+                                                "description": "Geographical location of the session",
+                                                "example": "New York, USA",
+                                                "type": "string"
+                                            },
+                                            "os": {
+                                                "description": "Operating system of the session",
+                                                "enum": ["Desktop", "Mobile"],
+                                                "example": "Desktop",
+                                                "type": "string"
+                                            },
+                                            "platform": {
+                                                "description": "Platform of the session, such as web browser",
+                                                "example": "Chrome",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of user sessions"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Sessions",
+                "tags": ["User"]
+            },
+            "parameters": []
+        },
+        "/api/users/@me/stripe/payment-methods": {
+            "get": {
+                "description": "Get all payment methods for the current user",
+                "operationId": "billingGetPaymentMethods",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "properties": {
+                                            "brand": {
+                                                "description": "Card brand",
+                                                "type": "string"
+                                            },
+                                            "createdAt": {
+                                                "description": "Created at (Unix timestamp in milliseconds)",
+                                                "type": "integer"
+                                            },
+                                            "expireMonth": {
+                                                "description": "Expiration month",
+                                                "type": "integer"
+                                            },
+                                            "expireYear": {
+                                                "description": "Expiration year",
+                                                "type": "integer"
+                                            },
+                                            "id": {
+                                                "description": "Payment method ID",
+                                                "type": "string"
+                                            },
+                                            "isDefault": {
+                                                "description": "Is default payment method",
+                                                "type": "boolean"
+                                            },
+                                            "last4": {
+                                                "description": "Last 4 digits of card number",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Current payment methods for the user"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Payment Methods",
+                "tags": ["Billing"]
+            },
+            "parameters": []
+        }
+    },
+    "servers": [
+        { "description": "Local Development Server", "url": "https://nodesty.com", "variables": {} }
+    ],
+    "tags": [
+        { "name": "Billing" },
+        { "name": "Dedicated Server" },
+        { "name": "Firewall" },
+        { "name": "Mail Hosting" },
+        { "name": "User" },
+        { "name": "Virtual Server" }
+    ]
+}

@@ -1,39 +1,30 @@
-## Contributing
+# Contributing
 
-[fork]: /fork
-[pr]: /compare
-[style]: https://standardjs.com/
-[code-of-conduct]: CODE_OF_CONDUCT.md
+By participating in this project, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
+## Development
 
-Please note that this project is released with a [Contributor Code of Conduct][code-of-conduct]. By participating in this project you agree to abide by its terms.
+```bash
+pnpm install
+pnpm check
+```
 
-## Issues and PRs
+`pnpm check` verifies generated-code drift, formatting, lint rules, TypeScript types, the package build, and runtime tests.
 
-If you have suggestions for how this project could be improved, or want to report a bug, open an issue! We'd love all and any contributions. If you have questions, too, we'd love to hear them.
+## OpenAPI changes
 
-We'd also love PRs. If you're thinking of a large PR, we advise opening up an issue first to talk about it, though! Look at the links below if you're not sure how to open a PR.
+The API snapshot and generated client are committed so releases are reproducible. Do not edit `openapi/openapi.json` or `src/generated` manually.
 
-## Submitting a pull request
+```bash
+# Download the current Nodesty schema and regenerate the SDK and grouped facade
+pnpm generate
 
-1. [Fork][fork] and clone the repository.
-1. Configure and install the dependencies: `pnpm i`.
-1. Create a new branch: `git checkout -b my-branch-name`.
-1. Make your change.
-1. Push to your fork and [submit a pull request][pr].
-1. Pat your self on the back and wait for your pull request to be reviewed and merged.
+# Regenerate from the committed snapshot without network access
+pnpm generate:client
+```
 
-Here are a few things you can do that will increase the likelihood of your pull request being accepted:
+Review generated request and response type changes before submitting a pull request.
 
-- Follow the [style guide][style] which is using standard. Any linting errors should be shown when running `pnpm check`.
-- Keep your changes as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
-- Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for your commit messages.
+## Pull requests
 
-Work in Progress pull requests are also welcome to get feedback early on, or if there is something blocked you.
-
-## Resources
-
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
+Keep changes focused and include tests for behavior that is not fully represented by the OpenAPI schema. Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages; release-please uses them to determine package versions and changelog entries.

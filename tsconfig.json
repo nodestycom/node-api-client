@@ -1,34 +1,16 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "alwaysStrict": false,
-        "declaration": false,
-        "emitDecoratorMetadata": true,
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "ignoreDeprecations": "5.0",
-        "lib": ["ESNext", "DOM"],
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
         "module": "ESNext",
-        "moduleResolution": "Node",
-        "newLine": "lf",
-        "noEmitHelpers": true,
+        "moduleResolution": "Bundler",
+        "noEmit": true,
         "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
-        "preserveConstEnums": true,
-        "pretty": true,
-        "removeComments": false,
         "resolveJsonModule": true,
-        "strict": false,
-        "target": "ESNext",
-        "useDefineForClassFields": true,
-        "rootDir": ".",
-        "outDir": "dist",
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
         "skipLibCheck": true,
-        "noEmit": true
+        "strict": true,
+        "target": "ES2022",
+        "types": ["node"]
     },
-    "exclude": ["node_modules", "dist"]
+    "include": ["src", "tests", "*.ts"],
+    "exclude": ["dist", "node_modules"]
 }
