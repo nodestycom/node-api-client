@@ -10,9 +10,9 @@
         }
     },
     "info": {
-        "description": "API Documentation for Nodesty.",
+        "description": "Build integrations for your Nodesty account, services, billing, virtual servers, dedicated servers, and firewall resources.\n\n## Authentication\n\nProtected endpoints use permission-scoped **Personal Access Tokens (PAT)**. Create a token from [Dashboard → Access Tokens](/dashboard/my-account/access-tokens), then send it with every request:\n\n```http\nAuthorization: PAT <your_personal_access_token>\n```\n\n> Keep access tokens server-side and never expose them in browser code or public repositories.\n\n## Common responses\n\n| Status | Meaning |\n| :--- | :--- |\n| **200** | Request completed successfully. |\n| **400** | The request parameters or payload are invalid. |\n| **401** | Authentication is missing or invalid. |\n| **403** | The token does not have the required permission. |\n| **404** | The requested resource could not be found. |\n| **429** | The request limit has been exceeded. |",
         "title": "API Docs | Nodesty",
-        "version": "latest"
+        "version": "1.0.0"
     },
     "openapi": "3.1.0",
     "paths": {
