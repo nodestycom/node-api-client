@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [3.1.0](https://github.com/nodestycom/node-api-client/compare/v3.0.0...v3.1.0) (2026-08-08)
+
+
+### Features
+
+* **api:** sync Nodesty OpenAPI schema ([4768039](https://github.com/nodestycom/node-api-client/commit/4768039078664703d8c0e4afcb34df3414bcc14b))
+* **api:** sync Nodesty OpenAPI schema ([acc490d](https://github.com/nodestycom/node-api-client/commit/acc490dfb0a660021cf7fa0679ef48de1f84aea6))
+
 ## [3.0.0](https://github.com/nodestycom/node-api-client/compare/v2.0.4...v3.0.0) (2026-07-13)
 
 
