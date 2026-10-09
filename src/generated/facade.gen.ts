@@ -26,7 +26,6 @@ import {
     virtualServerPerformAction,
     virtualServerGetBackups,
     virtualServerCreateBackup,
-    virtualServerUpdateBackup,
     virtualServerRestoreBackup,
     virtualServerChangeDailyBackupStatus,
     virtualServerChangePassword,
@@ -70,7 +69,6 @@ import type {
     VirtualServerPerformActionData,
     VirtualServerGetBackupsData,
     VirtualServerCreateBackupData,
-    VirtualServerUpdateBackupData,
     VirtualServerRestoreBackupData,
     VirtualServerChangeDailyBackupStatusData,
     VirtualServerChangePasswordData,
@@ -92,604 +90,499 @@ import type {
 } from './types.gen';
 import type { Options as SdkOptions } from './sdk.gen';
 
-type FacadeOptions<TData extends TDataShape> = Omit<SdkOptions<TData>, 'body' | 'client' | 'path'>;
-
-const normalizeResponse = async <T>(request: T): Promise<Awaited<T>> => {
-    const result = await request;
-    if (!result || typeof result !== 'object' || !('response' in result)) {
-        return result as Awaited<T>;
-    }
-
-    const response = result.response as { status?: number };
-    return (response.status === 204 ? { ...result, data: undefined } : result) as Awaited<T>;
-};
+type FacadeOptions<TData extends TDataShape, ThrowOnError extends boolean = false> = Omit<
+    SdkOptions<TData, ThrowOnError>,
+    'body' | 'client' | 'path'
+>;
 
 export class UserClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public getHelpRequests(
-        options?: FacadeOptions<UserGetHelpRequestsData>,
-    ): Promise<Awaited<ReturnType<typeof userGetHelpRequests>>> {
-        return normalizeResponse(
-            userGetHelpRequests({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getHelpRequests<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<UserGetHelpRequestsData, ThrowOnError>,
+    ): ReturnType<typeof userGetHelpRequests<ThrowOnError>> {
+        return userGetHelpRequests<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 
-    public getHelpRequest(
+    public getHelpRequest<ThrowOnError extends boolean = false>(
         id: UserGetHelpRequestData['path']['id'],
-        options?: FacadeOptions<UserGetHelpRequestData>,
-    ): Promise<Awaited<ReturnType<typeof userGetHelpRequest>>> {
-        return normalizeResponse(
-            userGetHelpRequest({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<UserGetHelpRequestData, ThrowOnError>,
+    ): ReturnType<typeof userGetHelpRequest<ThrowOnError>> {
+        return userGetHelpRequest<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getServices(
-        options?: FacadeOptions<UserGetServicesData>,
-    ): Promise<Awaited<ReturnType<typeof userGetServices>>> {
-        return normalizeResponse(
-            userGetServices({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getServices<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<UserGetServicesData, ThrowOnError>,
+    ): ReturnType<typeof userGetServices<ThrowOnError>> {
+        return userGetServices<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 
-    public getCurrentUser(
-        options?: FacadeOptions<UserGetCurrentUserData>,
-    ): Promise<Awaited<ReturnType<typeof userGetCurrentUser>>> {
-        return normalizeResponse(
-            userGetCurrentUser({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getCurrentUser<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<UserGetCurrentUserData, ThrowOnError>,
+    ): ReturnType<typeof userGetCurrentUser<ThrowOnError>> {
+        return userGetCurrentUser<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 
-    public getInvoices(
-        options?: FacadeOptions<UserGetInvoicesData>,
-    ): Promise<Awaited<ReturnType<typeof userGetInvoices>>> {
-        return normalizeResponse(
-            userGetInvoices({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getInvoices<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<UserGetInvoicesData, ThrowOnError>,
+    ): ReturnType<typeof userGetInvoices<ThrowOnError>> {
+        return userGetInvoices<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 
-    public getInvoice(
+    public getInvoice<ThrowOnError extends boolean = false>(
         id: UserGetInvoiceData['path']['id'],
-        options?: FacadeOptions<UserGetInvoiceData>,
-    ): Promise<Awaited<ReturnType<typeof userGetInvoice>>> {
-        return normalizeResponse(
-            userGetInvoice({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<UserGetInvoiceData, ThrowOnError>,
+    ): ReturnType<typeof userGetInvoice<ThrowOnError>> {
+        return userGetInvoice<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getReferralCode(
-        options?: FacadeOptions<UserGetReferralCodeData>,
-    ): Promise<Awaited<ReturnType<typeof userGetReferralCode>>> {
-        return normalizeResponse(
-            userGetReferralCode({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getReferralCode<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<UserGetReferralCodeData, ThrowOnError>,
+    ): ReturnType<typeof userGetReferralCode<ThrowOnError>> {
+        return userGetReferralCode<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 
-    public getSessions(
-        options?: FacadeOptions<UserGetSessionsData>,
-    ): Promise<Awaited<ReturnType<typeof userGetSessions>>> {
-        return normalizeResponse(
-            userGetSessions({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getSessions<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<UserGetSessionsData, ThrowOnError>,
+    ): ReturnType<typeof userGetSessions<ThrowOnError>> {
+        return userGetSessions<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 }
 
 export class DedicatedServerClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public performAction(
+    public performAction<ThrowOnError extends boolean = false>(
         id: DedicatedServerPerformActionData['path']['id'],
         data: NonNullable<DedicatedServerPerformActionData['body']>,
-        options?: FacadeOptions<DedicatedServerPerformActionData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerPerformAction>>> {
-        return normalizeResponse(
-            dedicatedServerPerformAction({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerPerformActionData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerPerformAction<ThrowOnError>> {
+        return dedicatedServerPerformAction<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public getHardwareComponents(
+    public getHardwareComponents<ThrowOnError extends boolean = false>(
         id: DedicatedServerGetHardwareComponentsData['path']['id'],
-        options?: FacadeOptions<DedicatedServerGetHardwareComponentsData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerGetHardwareComponents>>> {
-        return normalizeResponse(
-            dedicatedServerGetHardwareComponents({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerGetHardwareComponentsData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerGetHardwareComponents<ThrowOnError>> {
+        return dedicatedServerGetHardwareComponents<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getInformation(
+    public getInformation<ThrowOnError extends boolean = false>(
         id: DedicatedServerGetInformationData['path']['id'],
-        options?: FacadeOptions<DedicatedServerGetInformationData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerGetInformation>>> {
-        return normalizeResponse(
-            dedicatedServerGetInformation({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerGetInformationData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerGetInformation<ThrowOnError>> {
+        return dedicatedServerGetInformation<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getOsTemplates(
+    public getOsTemplates<ThrowOnError extends boolean = false>(
         id: DedicatedServerGetOsTemplatesData['path']['id'],
-        options?: FacadeOptions<DedicatedServerGetOsTemplatesData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerGetOsTemplates>>> {
-        return normalizeResponse(
-            dedicatedServerGetOsTemplates({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerGetOsTemplatesData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerGetOsTemplates<ThrowOnError>> {
+        return dedicatedServerGetOsTemplates<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public reinstall(
+    public reinstall<ThrowOnError extends boolean = false>(
         id: DedicatedServerReinstallData['path']['id'],
         data: NonNullable<DedicatedServerReinstallData['body']>,
-        options?: FacadeOptions<DedicatedServerReinstallData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerReinstall>>> {
-        return normalizeResponse(
-            dedicatedServerReinstall({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerReinstallData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerReinstall<ThrowOnError>> {
+        return dedicatedServerReinstall<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public getReinstallStatus(
+    public getReinstallStatus<ThrowOnError extends boolean = false>(
         id: DedicatedServerGetReinstallStatusData['path']['id'],
-        options?: FacadeOptions<DedicatedServerGetReinstallStatusData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerGetReinstallStatus>>> {
-        return normalizeResponse(
-            dedicatedServerGetReinstallStatus({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerGetReinstallStatusData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerGetReinstallStatus<ThrowOnError>> {
+        return dedicatedServerGetReinstallStatus<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getTasks(
+    public getTasks<ThrowOnError extends boolean = false>(
         id: DedicatedServerGetTasksData['path']['id'],
-        options?: FacadeOptions<DedicatedServerGetTasksData>,
-    ): Promise<Awaited<ReturnType<typeof dedicatedServerGetTasks>>> {
-        return normalizeResponse(
-            dedicatedServerGetTasks({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<DedicatedServerGetTasksData, ThrowOnError>,
+    ): ReturnType<typeof dedicatedServerGetTasks<ThrowOnError>> {
+        return dedicatedServerGetTasks<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 }
 
 export class FirewallClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public getAttackLogs(
+    public getAttackLogs<ThrowOnError extends boolean = false>(
         id: FirewallGetAttackLogsData['path']['id'],
         ip: FirewallGetAttackLogsData['path']['ip'],
-        options?: FacadeOptions<FirewallGetAttackLogsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallGetAttackLogs>>> {
-        return normalizeResponse(
-            firewallGetAttackLogs({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-            }),
-        );
+        options?: FacadeOptions<FirewallGetAttackLogsData, ThrowOnError>,
+    ): ReturnType<typeof firewallGetAttackLogs<ThrowOnError>> {
+        return firewallGetAttackLogs<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
     }
 
-    public getAttackNotificationSettings(
+    public getAttackNotificationSettings<ThrowOnError extends boolean = false>(
         id: FirewallGetAttackNotificationSettingsData['path']['id'],
         ip: FirewallGetAttackNotificationSettingsData['path']['ip'],
-        options?: FacadeOptions<FirewallGetAttackNotificationSettingsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallGetAttackNotificationSettings>>> {
-        return normalizeResponse(
-            firewallGetAttackNotificationSettings({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-            }),
-        );
+        options?: FacadeOptions<FirewallGetAttackNotificationSettingsData, ThrowOnError>,
+    ): ReturnType<typeof firewallGetAttackNotificationSettings<ThrowOnError>> {
+        return firewallGetAttackNotificationSettings<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
     }
 
-    public updateAttackNotificationSettings(
+    public updateAttackNotificationSettings<ThrowOnError extends boolean = false>(
         id: FirewallUpdateAttackNotificationSettingsData['path']['id'],
         ip: FirewallUpdateAttackNotificationSettingsData['path']['ip'],
         data?: NonNullable<FirewallUpdateAttackNotificationSettingsData['body']>,
-        options?: FacadeOptions<FirewallUpdateAttackNotificationSettingsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallUpdateAttackNotificationSettings>>> {
-        return normalizeResponse(
-            firewallUpdateAttackNotificationSettings({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<FirewallUpdateAttackNotificationSettingsData, ThrowOnError>,
+    ): ReturnType<typeof firewallUpdateAttackNotificationSettings<ThrowOnError>> {
+        return firewallUpdateAttackNotificationSettings<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+            body: data,
+        });
     }
 
-    public resetReverseDns(
+    public resetReverseDns<ThrowOnError extends boolean = false>(
         id: FirewallResetReverseDnsData['path']['id'],
         ip: FirewallResetReverseDnsData['path']['ip'],
-        options?: FacadeOptions<FirewallResetReverseDnsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallResetReverseDns>>> {
-        return normalizeResponse(
-            firewallResetReverseDns({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-            }),
-        );
+        options?: FacadeOptions<FirewallResetReverseDnsData, ThrowOnError>,
+    ): ReturnType<typeof firewallResetReverseDns<ThrowOnError>> {
+        return firewallResetReverseDns<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
     }
 
-    public getReverseDns(
+    public getReverseDns<ThrowOnError extends boolean = false>(
         id: FirewallGetReverseDnsData['path']['id'],
         ip: FirewallGetReverseDnsData['path']['ip'],
-        options?: FacadeOptions<FirewallGetReverseDnsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallGetReverseDns>>> {
-        return normalizeResponse(
-            firewallGetReverseDns({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-            }),
-        );
+        options?: FacadeOptions<FirewallGetReverseDnsData, ThrowOnError>,
+    ): ReturnType<typeof firewallGetReverseDns<ThrowOnError>> {
+        return firewallGetReverseDns<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
     }
 
-    public upsertReverseDns(
+    public upsertReverseDns<ThrowOnError extends boolean = false>(
         id: FirewallUpsertReverseDnsData['path']['id'],
         ip: FirewallUpsertReverseDnsData['path']['ip'],
         data: NonNullable<FirewallUpsertReverseDnsData['body']>,
-        options?: FacadeOptions<FirewallUpsertReverseDnsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallUpsertReverseDns>>> {
-        return normalizeResponse(
-            firewallUpsertReverseDns({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<FirewallUpsertReverseDnsData, ThrowOnError>,
+    ): ReturnType<typeof firewallUpsertReverseDns<ThrowOnError>> {
+        return firewallUpsertReverseDns<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+            body: data,
+        });
     }
 
-    public getRules(
+    public getRules<ThrowOnError extends boolean = false>(
         id: FirewallGetRulesData['path']['id'],
         ip: FirewallGetRulesData['path']['ip'],
-        options?: FacadeOptions<FirewallGetRulesData>,
-    ): Promise<Awaited<ReturnType<typeof firewallGetRules>>> {
-        return normalizeResponse(
-            firewallGetRules({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-            }),
-        );
+        options?: FacadeOptions<FirewallGetRulesData, ThrowOnError>,
+    ): ReturnType<typeof firewallGetRules<ThrowOnError>> {
+        return firewallGetRules<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
     }
 
-    public deleteRule(
+    public deleteRule<ThrowOnError extends boolean = false>(
         id: FirewallDeleteRuleData['path']['id'],
         ip: FirewallDeleteRuleData['path']['ip'],
         ruleId: FirewallDeleteRuleData['path']['ruleId'],
-        options?: FacadeOptions<FirewallDeleteRuleData>,
-    ): Promise<Awaited<ReturnType<typeof firewallDeleteRule>>> {
-        return normalizeResponse(
-            firewallDeleteRule({
-                ...options,
-                client: this.client,
-                path: { id, ip, ruleId },
-            }),
-        );
+        options?: FacadeOptions<FirewallDeleteRuleData, ThrowOnError>,
+    ): ReturnType<typeof firewallDeleteRule<ThrowOnError>> {
+        return firewallDeleteRule<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip, ruleId },
+        });
     }
 
-    public getStatistics(
+    public getStatistics<ThrowOnError extends boolean = false>(
         id: FirewallGetStatisticsData['path']['id'],
         ip: FirewallGetStatisticsData['path']['ip'],
-        options?: FacadeOptions<FirewallGetStatisticsData>,
-    ): Promise<Awaited<ReturnType<typeof firewallGetStatistics>>> {
-        return normalizeResponse(
-            firewallGetStatistics({
-                ...options,
-                client: this.client,
-                path: { id, ip },
-            }),
-        );
+        options?: FacadeOptions<FirewallGetStatisticsData, ThrowOnError>,
+    ): ReturnType<typeof firewallGetStatistics<ThrowOnError>> {
+        return firewallGetStatistics<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
     }
 }
 
 export class MailHostingClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public getInformation(
+    public getInformation<ThrowOnError extends boolean = false>(
         id: MailHostingGetInformationData['path']['id'],
-        options?: FacadeOptions<MailHostingGetInformationData>,
-    ): Promise<Awaited<ReturnType<typeof mailHostingGetInformation>>> {
-        return normalizeResponse(
-            mailHostingGetInformation({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<MailHostingGetInformationData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingGetInformation<ThrowOnError>> {
+        return mailHostingGetInformation<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 }
 
 export class VirtualServerClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public performAction(
+    public performAction<ThrowOnError extends boolean = false>(
         id: VirtualServerPerformActionData['path']['id'],
         data: NonNullable<VirtualServerPerformActionData['body']>,
-        options?: FacadeOptions<VirtualServerPerformActionData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerPerformAction>>> {
-        return normalizeResponse(
-            virtualServerPerformAction({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<VirtualServerPerformActionData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerPerformAction<ThrowOnError>> {
+        return virtualServerPerformAction<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public getBackups(
+    public getBackups<ThrowOnError extends boolean = false>(
         id: VirtualServerGetBackupsData['path']['id'],
-        options?: FacadeOptions<VirtualServerGetBackupsData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerGetBackups>>> {
-        return normalizeResponse(
-            virtualServerGetBackups({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerGetBackupsData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetBackups<ThrowOnError>> {
+        return virtualServerGetBackups<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public createBackup(
+    public createBackup<ThrowOnError extends boolean = false>(
         id: VirtualServerCreateBackupData['path']['id'],
-        options?: FacadeOptions<VirtualServerCreateBackupData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerCreateBackup>>> {
-        return normalizeResponse(
-            virtualServerCreateBackup({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerCreateBackupData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerCreateBackup<ThrowOnError>> {
+        return virtualServerCreateBackup<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public updateBackup(
-        id: VirtualServerUpdateBackupData['path']['id'],
-        file: VirtualServerUpdateBackupData['path']['file'],
-        data?: NonNullable<VirtualServerUpdateBackupData['body']>,
-        options?: FacadeOptions<VirtualServerUpdateBackupData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerUpdateBackup>>> {
-        return normalizeResponse(
-            virtualServerUpdateBackup({
-                ...options,
-                client: this.client,
-                path: { id, file },
-                body: data,
-            }),
-        );
-    }
-
-    public restoreBackup(
+    public restoreBackup<ThrowOnError extends boolean = false>(
         id: VirtualServerRestoreBackupData['path']['id'],
         file: VirtualServerRestoreBackupData['path']['file'],
-        options?: FacadeOptions<VirtualServerRestoreBackupData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerRestoreBackup>>> {
-        return normalizeResponse(
-            virtualServerRestoreBackup({
-                ...options,
-                client: this.client,
-                path: { id, file },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerRestoreBackupData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerRestoreBackup<ThrowOnError>> {
+        return virtualServerRestoreBackup<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, file },
+        });
     }
 
-    public changeDailyBackupStatus(
+    public changeDailyBackupStatus<ThrowOnError extends boolean = false>(
         id: VirtualServerChangeDailyBackupStatusData['path']['id'],
         data: NonNullable<VirtualServerChangeDailyBackupStatusData['body']>,
-        options?: FacadeOptions<VirtualServerChangeDailyBackupStatusData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerChangeDailyBackupStatus>>> {
-        return normalizeResponse(
-            virtualServerChangeDailyBackupStatus({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<VirtualServerChangeDailyBackupStatusData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerChangeDailyBackupStatus<ThrowOnError>> {
+        return virtualServerChangeDailyBackupStatus<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public changePassword(
+    public changePassword<ThrowOnError extends boolean = false>(
         id: VirtualServerChangePasswordData['path']['id'],
         data: NonNullable<VirtualServerChangePasswordData['body']>,
-        options?: FacadeOptions<VirtualServerChangePasswordData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerChangePassword>>> {
-        return normalizeResponse(
-            virtualServerChangePassword({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<VirtualServerChangePasswordData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerChangePassword<ThrowOnError>> {
+        return virtualServerChangePassword<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public getGraphs(
+    public getGraphs<ThrowOnError extends boolean = false>(
         id: VirtualServerGetGraphsData['path']['id'],
-        options?: FacadeOptions<VirtualServerGetGraphsData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerGetGraphs>>> {
-        return normalizeResponse(
-            virtualServerGetGraphs({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerGetGraphsData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetGraphs<ThrowOnError>> {
+        return virtualServerGetGraphs<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getInformation(
+    public getInformation<ThrowOnError extends boolean = false>(
         id: VirtualServerGetInformationData['path']['id'],
-        options?: FacadeOptions<VirtualServerGetInformationData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerGetInformation>>> {
-        return normalizeResponse(
-            virtualServerGetInformation({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerGetInformationData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetInformation<ThrowOnError>> {
+        return virtualServerGetInformation<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public getOsTemplates(
+    public getOsTemplates<ThrowOnError extends boolean = false>(
         id: VirtualServerGetOsTemplatesData['path']['id'],
-        options?: FacadeOptions<VirtualServerGetOsTemplatesData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerGetOsTemplates>>> {
-        return normalizeResponse(
-            virtualServerGetOsTemplates({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerGetOsTemplatesData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetOsTemplates<ThrowOnError>> {
+        return virtualServerGetOsTemplates<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 
-    public reinstall(
+    public reinstall<ThrowOnError extends boolean = false>(
         id: VirtualServerReinstallData['path']['id'],
         data: NonNullable<VirtualServerReinstallData['body']>,
-        options?: FacadeOptions<VirtualServerReinstallData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerReinstall>>> {
-        return normalizeResponse(
-            virtualServerReinstall({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<VirtualServerReinstallData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerReinstall<ThrowOnError>> {
+        return virtualServerReinstall<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public getTasks(
+    public getTasks<ThrowOnError extends boolean = false>(
         id: VirtualServerGetTasksData['path']['id'],
-        options?: FacadeOptions<VirtualServerGetTasksData>,
-    ): Promise<Awaited<ReturnType<typeof virtualServerGetTasks>>> {
-        return normalizeResponse(
-            virtualServerGetTasks({
-                ...options,
-                client: this.client,
-                path: { id },
-            }),
-        );
+        options?: FacadeOptions<VirtualServerGetTasksData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetTasks<ThrowOnError>> {
+        return virtualServerGetTasks<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
     }
 }
 
 export class BillingClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public getProductsByGroupId(
+    public getProductsByGroupId<ThrowOnError extends boolean = false>(
         groupId: BillingGetProductsByGroupIdData['path']['groupId'],
-        options?: FacadeOptions<BillingGetProductsByGroupIdData>,
-    ): Promise<Awaited<ReturnType<typeof billingGetProductsByGroupId>>> {
-        return normalizeResponse(
-            billingGetProductsByGroupId({
-                ...options,
-                client: this.client,
-                path: { groupId },
-            }),
-        );
+        options?: FacadeOptions<BillingGetProductsByGroupIdData, ThrowOnError>,
+    ): ReturnType<typeof billingGetProductsByGroupId<ThrowOnError>> {
+        return billingGetProductsByGroupId<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { groupId },
+        });
     }
 
-    public addOrder(
+    public addOrder<ThrowOnError extends boolean = false>(
         groupId: BillingAddOrderData['path']['groupId'],
         productId: BillingAddOrderData['path']['productId'],
         data: NonNullable<BillingAddOrderData['body']>,
-        options?: FacadeOptions<BillingAddOrderData>,
-    ): Promise<Awaited<ReturnType<typeof billingAddOrder>>> {
-        return normalizeResponse(
-            billingAddOrder({
-                ...options,
-                client: this.client,
-                path: { groupId, productId },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<BillingAddOrderData, ThrowOnError>,
+    ): ReturnType<typeof billingAddOrder<ThrowOnError>> {
+        return billingAddOrder<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { groupId, productId },
+            body: data,
+        });
     }
 
-    public getStoreGroups(
-        options?: FacadeOptions<BillingGetStoreGroupsData>,
-    ): Promise<Awaited<ReturnType<typeof billingGetStoreGroups>>> {
-        return normalizeResponse(
-            billingGetStoreGroups({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getStoreGroups<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<BillingGetStoreGroupsData, ThrowOnError>,
+    ): ReturnType<typeof billingGetStoreGroups<ThrowOnError>> {
+        return billingGetStoreGroups<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 
-    public makePayment(
+    public makePayment<ThrowOnError extends boolean = false>(
         id: BillingMakePaymentData['path']['id'],
         data?: NonNullable<BillingMakePaymentData['body']>,
-        options?: FacadeOptions<BillingMakePaymentData>,
-    ): Promise<Awaited<ReturnType<typeof billingMakePayment>>> {
-        return normalizeResponse(
-            billingMakePayment({
-                ...options,
-                client: this.client,
-                path: { id },
-                body: data,
-            }),
-        );
+        options?: FacadeOptions<BillingMakePaymentData, ThrowOnError>,
+    ): ReturnType<typeof billingMakePayment<ThrowOnError>> {
+        return billingMakePayment<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
     }
 
-    public getPaymentMethods(
-        options?: FacadeOptions<BillingGetPaymentMethodsData>,
-    ): Promise<Awaited<ReturnType<typeof billingGetPaymentMethods>>> {
-        return normalizeResponse(
-            billingGetPaymentMethods({
-                ...options,
-                client: this.client,
-            }),
-        );
+    public getPaymentMethods<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<BillingGetPaymentMethodsData, ThrowOnError>,
+    ): ReturnType<typeof billingGetPaymentMethods<ThrowOnError>> {
+        return billingGetPaymentMethods<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
     }
 }
 

@@ -5,6 +5,7 @@ import {
     toPascalCase,
     writeFormattedFile,
 } from './codegen-utils.mjs';
+import { normalizeNullableSchemas } from './normalize-schema.mjs';
 
 const sourceUrl = process.env.NODESTY_OPENAPI_URL ?? 'https://nodesty.com/_openapi.json';
 const outputPath = projectPath('openapi/openapi.json');
@@ -22,6 +23,7 @@ if (document.openapi !== '3.1.0' || !document.paths || typeof document.paths !==
 }
 
 const operationIds = new Set();
+normalizeNullableSchemas(document);
 const usedTags = new Set();
 
 const pathParameterNames = (path) => [...path.matchAll(/\{([^}]+)}/g)].map((match) => match[1]);

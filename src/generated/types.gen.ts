@@ -194,7 +194,7 @@ export type UserGetServicesResponses = {
         /**
          * Group ID of the service, if applicable
          */
-        groupId?: number;
+        groupId?: number | null;
         /**
          * Unique identifier for the service
          */
@@ -238,7 +238,7 @@ export type UserGetServicesResponses = {
         /**
          * Password associated with the service
          */
-        password?: string;
+        password?: string | null;
         /**
          * Product ID associated with the service
          */
@@ -273,7 +273,7 @@ export type UserGetServicesResponses = {
         /**
          * Username associated with the service
          */
-        username?: string;
+        username?: string | null;
         /**
          * VPS ID if applicable, otherwise null
          */
@@ -672,7 +672,7 @@ export type FirewallGetAttackLogsResponses = {
         /**
          * Timestamp when the attack ended, null if ongoing
          */
-        endedAt?: number;
+        endedAt?: number | null;
         /**
          * Peak traffic during the attack
          */
@@ -727,7 +727,7 @@ export type FirewallGetAttackNotificationSettingsResponses = {
         /**
          * Discord webhook URL for attack notifications
          */
-        discordWebhookURL?: string;
+        discordWebhookURL?: string | null;
         /**
          * Whether email notifications are enabled for attack alerts
          */
@@ -746,7 +746,7 @@ export type FirewallUpdateAttackNotificationSettingsData = {
         /**
          * Discord webhook URL for attack notifications
          */
-        discordWebhookURL?: string;
+        discordWebhookURL?: string | null;
         /**
          * Whether email notifications are enabled
          */
@@ -871,7 +871,7 @@ export type FirewallGetReverseDnsResponses = {
         /**
          * Reverse DNS entry for the IP address
          */
-        rdns?: string;
+        rdns?: string | null;
     };
 };
 
@@ -1141,7 +1141,7 @@ export type MailHostingGetInformationResponses = {
              * DKIM record value
              */
             value?: string;
-        };
+        } | null;
         dns?: Array<{
             /**
              * DNS record name
@@ -1351,53 +1351,6 @@ export type VirtualServerCreateBackupResponses = {
 export type VirtualServerCreateBackupResponse =
     VirtualServerCreateBackupResponses[keyof VirtualServerCreateBackupResponses];
 
-export type VirtualServerUpdateBackupData = {
-    /**
-     * Backup update request
-     */
-    body?: {
-        /**
-         * Whether the backup is locked
-         */
-        locked?: boolean;
-        /**
-         * Notes about the backup
-         */
-        notes?: string;
-    };
-    path: {
-        /**
-         * Service ID
-         */
-        id: string;
-        file: string;
-    };
-    query?: never;
-    url: '/api/services/{id}/vps/backups/{file}';
-};
-
-export type VirtualServerUpdateBackupErrors = {
-    /**
-     * VPS not found
-     */
-    404: {
-        message?: string;
-    };
-};
-
-export type VirtualServerUpdateBackupError =
-    VirtualServerUpdateBackupErrors[keyof VirtualServerUpdateBackupErrors];
-
-export type VirtualServerUpdateBackupResponses = {
-    /**
-     * Backup updated successfully
-     */
-    204: void;
-};
-
-export type VirtualServerUpdateBackupResponse =
-    VirtualServerUpdateBackupResponses[keyof VirtualServerUpdateBackupResponses];
-
 export type VirtualServerRestoreBackupData = {
     body?: never;
     path: {
@@ -1405,6 +1358,9 @@ export type VirtualServerRestoreBackupData = {
          * Service ID
          */
         id: string;
+        /**
+         * Backup file name
+         */
         file: string;
     };
     query?: never;
@@ -1803,7 +1759,7 @@ export type VirtualServerGetTasksResponses = {
         /**
          * Unix timestamp when the task ended or null if not ended
          */
-        endedAt?: number;
+        endedAt?: number | null;
         /**
          * Unix timestamp when the task started
          */
@@ -1890,17 +1846,17 @@ export type BillingAddOrderData = {
         /**
          * Domain name for the web/mail hosting order
          */
-        domain?: string;
+        domain?: string | null;
         /**
          * Configuration options
          */
         options?: {
             [key: string]: number;
-        };
+        } | null;
         /**
          * Promo code
          */
-        promoCode?: string;
+        promoCode?: string | null;
     };
     path: {
         /**
@@ -1986,7 +1942,7 @@ export type UserGetCurrentUserResponses = {
         /**
          * User's company name, if applicable
          */
-        companyName?: string;
+        companyName?: string | null;
         /**
          * User's country
          */
@@ -2059,7 +2015,7 @@ export type UserGetCurrentUserResponses = {
         /**
          * User's tax identification number, if applicable
          */
-        taxId?: string;
+        taxId?: string | null;
         /**
          * Whether TOTP (Authentication App) is enabled for the user
          */
@@ -2093,7 +2049,7 @@ export type UserGetInvoicesResponses = {
         /**
          * Unix timestamp of the invoice payment date, null if not paid
          */
-        datePaid?: number;
+        datePaid?: number | null;
         /**
          * Unix timestamp of the invoice due date
          */
@@ -2158,7 +2114,7 @@ export type UserGetInvoiceResponses = {
         /**
          * Unix timestamp of the invoice payment date, null if not paid
          */
-        datePaid?: number;
+        datePaid?: number | null;
         /**
          * Unix timestamp of the invoice due date
          */
@@ -2266,7 +2222,7 @@ export type BillingMakePaymentResponses = {
              * Last 4 digits of card
              */
             last4?: string;
-        };
+        } | null;
         /**
          * Payment method used
          */

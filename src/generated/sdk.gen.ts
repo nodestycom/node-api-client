@@ -68,9 +68,6 @@ import type {
     VirtualServerCreateBackupData,
     VirtualServerCreateBackupResponses,
     VirtualServerCreateBackupErrors,
-    VirtualServerUpdateBackupData,
-    VirtualServerUpdateBackupResponses,
-    VirtualServerUpdateBackupErrors,
     VirtualServerRestoreBackupData,
     VirtualServerRestoreBackupResponses,
     VirtualServerRestoreBackupErrors,
@@ -122,7 +119,7 @@ import { client as _heyApiClient } from './client.gen';
 export type Options<
     TData extends TDataShape = TDataShape,
     ThrowOnError extends boolean = boolean,
-> = ClientOptions<TData, ThrowOnError> & {
+> = Omit<ClientOptions<TData, ThrowOnError>, 'responseStyle'> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -156,6 +153,7 @@ export const userGetHelpRequests = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/help-requests',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -179,6 +177,7 @@ export const userGetHelpRequest = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/help-requests/{id}',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -198,6 +197,7 @@ export const userGetServices = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -221,6 +221,7 @@ export const dedicatedServerPerformAction = <ThrowOnError extends boolean = fals
         ],
         url: '/api/services/{id}/dedicated/action',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -248,6 +249,7 @@ export const dedicatedServerGetHardwareComponents = <ThrowOnError extends boolea
         ],
         url: '/api/services/{id}/dedicated/hardware',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -271,6 +273,7 @@ export const dedicatedServerGetInformation = <ThrowOnError extends boolean = fal
         ],
         url: '/api/services/{id}/dedicated/info',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -294,6 +297,7 @@ export const dedicatedServerGetOsTemplates = <ThrowOnError extends boolean = fal
         ],
         url: '/api/services/{id}/dedicated/os-templates',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -317,6 +321,7 @@ export const dedicatedServerReinstall = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/dedicated/reinstall',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -344,6 +349,7 @@ export const dedicatedServerGetReinstallStatus = <ThrowOnError extends boolean =
         ],
         url: '/api/services/{id}/dedicated/reinstall-status',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -367,6 +373,7 @@ export const dedicatedServerGetTasks = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/dedicated/tasks',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -390,6 +397,7 @@ export const firewallGetAttackLogs = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/attack-logs',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -413,6 +421,7 @@ export const firewallGetAttackNotificationSettings = <ThrowOnError extends boole
         ],
         url: '/api/services/{id}/firewall/{ip}/attack-notification',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -436,6 +445,7 @@ export const firewallUpdateAttackNotificationSettings = <ThrowOnError extends bo
         ],
         url: '/api/services/{id}/firewall/{ip}/attack-notification',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -463,6 +473,7 @@ export const firewallResetReverseDns = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/rdns',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -486,6 +497,7 @@ export const firewallGetReverseDns = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/rdns',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -509,6 +521,7 @@ export const firewallUpsertReverseDns = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/rdns',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -536,6 +549,7 @@ export const firewallGetRules = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/rules',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -559,6 +573,7 @@ export const firewallDeleteRule = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/rules/{ruleId}',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -582,6 +597,7 @@ export const firewallGetStatistics = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/firewall/{ip}/stats',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -605,6 +621,7 @@ export const mailHostingGetInformation = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/mail/info',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -628,6 +645,7 @@ export const virtualServerPerformAction = <ThrowOnError extends boolean = false>
         ],
         url: '/api/services/{id}/vps/action',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -655,6 +673,7 @@ export const virtualServerGetBackups = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/vps/backups',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -678,33 +697,7 @@ export const virtualServerCreateBackup = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/vps/backups',
         ...options,
-    });
-};
-
-/**
- * Update Backup
- * Update a backup for the VPS
- */
-export const virtualServerUpdateBackup = <ThrowOnError extends boolean = false>(
-    options: Options<VirtualServerUpdateBackupData, ThrowOnError>,
-) => {
-    return (options.client ?? _heyApiClient).patch<
-        VirtualServerUpdateBackupResponses,
-        VirtualServerUpdateBackupErrors,
-        ThrowOnError
-    >({
-        security: [
-            {
-                name: 'Authorization',
-                type: 'apiKey',
-            },
-        ],
-        url: '/api/services/{id}/vps/backups/{file}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
+        responseStyle: 'fields',
     });
 };
 
@@ -728,6 +721,7 @@ export const virtualServerRestoreBackup = <ThrowOnError extends boolean = false>
         ],
         url: '/api/services/{id}/vps/backups/{file}/restore',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -751,6 +745,7 @@ export const virtualServerChangeDailyBackupStatus = <ThrowOnError extends boolea
         ],
         url: '/api/services/{id}/vps/backups/daily-backups',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -778,6 +773,7 @@ export const virtualServerChangePassword = <ThrowOnError extends boolean = false
         ],
         url: '/api/services/{id}/vps/change-password',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -805,6 +801,7 @@ export const virtualServerGetGraphs = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/vps/graphs',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -828,6 +825,7 @@ export const virtualServerGetInformation = <ThrowOnError extends boolean = false
         ],
         url: '/api/services/{id}/vps/info',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -851,6 +849,7 @@ export const virtualServerGetOsTemplates = <ThrowOnError extends boolean = false
         ],
         url: '/api/services/{id}/vps/os-templates',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -874,6 +873,7 @@ export const virtualServerReinstall = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/vps/reinstall',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -901,6 +901,7 @@ export const virtualServerGetTasks = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/services/{id}/vps/tasks',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -924,6 +925,7 @@ export const billingGetProductsByGroupId = <ThrowOnError extends boolean = false
         ],
         url: '/api/store/{groupId}',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -943,6 +945,7 @@ export const billingAddOrder = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/store/{groupId}/{productId}/order',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -964,6 +967,7 @@ export const billingGetStoreGroups = <ThrowOnError extends boolean = false>(
     >({
         url: '/api/store/groups',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -987,6 +991,7 @@ export const userGetCurrentUser = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -1006,6 +1011,7 @@ export const userGetInvoices = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me/invoices',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -1025,6 +1031,7 @@ export const userGetInvoice = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me/invoices/{id}',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -1048,6 +1055,7 @@ export const billingMakePayment = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me/invoices/{id}/pay',
         ...options,
+        responseStyle: 'fields',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -1075,6 +1083,7 @@ export const userGetReferralCode = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me/referral',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -1094,6 +1103,7 @@ export const userGetSessions = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me/sessions',
         ...options,
+        responseStyle: 'fields',
     });
 };
 
@@ -1117,5 +1127,6 @@ export const billingGetPaymentMethods = <ThrowOnError extends boolean = false>(
         ],
         url: '/api/users/@me/stripe/payment-methods',
         ...options,
+        responseStyle: 'fields',
     });
 };

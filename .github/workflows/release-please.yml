@@ -15,24 +15,24 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - id: release
-              uses: googleapis/release-please-action@v4
+              uses: googleapis/release-please-action@v5
               with:
                   config-file: release-please-config.json
                   manifest-file: .release-please-manifest.json
 
             - if: ${{ steps.release.outputs.release_created }}
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   ref: ${{ steps.release.outputs.tag_name }}
 
             - if: ${{ steps.release.outputs.release_created }}
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@v5
 
             - if: ${{ steps.release.outputs.release_created }}
-              name: Use Node.js 22
-              uses: actions/setup-node@v4
+              name: Use Node.js 24
+              uses: actions/setup-node@v6
               with:
-                  node-version: 22
+                  node-version: 24
                   cache: pnpm
                   registry-url: https://registry.npmjs.org
 

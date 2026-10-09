@@ -5,7 +5,7 @@ export const NODESTY_API_BASE_URL = 'https://nodesty.com';
 
 export type NodestyClient = Client;
 
-export interface NodestyClientOptions extends Omit<Config, 'auth' | 'baseUrl'> {
+export interface NodestyClientOptions extends Omit<Config, 'auth' | 'baseUrl' | 'responseStyle'> {
     /** Personal access token without the `PAT ` prefix. */
     accessToken?: string;
     /** Override this for tests, proxies, or self-hosted compatible APIs. */
@@ -22,6 +22,7 @@ export const createNodestyClient = ({
         ...config,
         auth: accessToken ? `PAT ${accessToken}` : undefined,
         baseUrl,
+        responseStyle: 'fields',
     });
 
 /** Stripe.js-style grouped Nodesty API client. */

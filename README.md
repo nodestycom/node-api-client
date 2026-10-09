@@ -62,6 +62,8 @@ All parameters, request bodies, response data, and documented errors are fully t
 
 Methods return the parsed API body together with the standard Fetch API `Request` and `Response` objects.
 
+Grouped methods and exported SDK functions always use this response shape, including when a custom raw client is configured with `responseStyle: 'data'`. Use the raw client's request methods directly if you need another response style.
+
 ### Successful response (200)
 
 ```ts

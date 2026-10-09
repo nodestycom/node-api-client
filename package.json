@@ -18,7 +18,7 @@
     "scripts": {
         "build": "tsdown",
         "generate:spec": "node scripts/normalize-openapi.mjs",
-        "generate:client": "openapi-ts --file openapi-ts.config.ts && node scripts/generate-facade.mjs",
+        "generate:client": "openapi-ts --file openapi-ts.config.ts && node scripts/finalize-client.mjs && node scripts/generate-facade.mjs",
         "generate": "pnpm generate:spec && pnpm generate:client",
         "generate:check": "pnpm generate:client && git diff --exit-code -- src/generated",
         "lint": "prettier --check . && eslint .",

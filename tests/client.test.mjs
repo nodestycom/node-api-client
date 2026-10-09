@@ -4,9 +4,11 @@ import test from 'node:test';
 import {
     billingGetStoreGroups,
     createNodestyClient,
+    createRawClient,
     NodestyApiClient,
     userGetCurrentUser,
     virtualServerGetInformation,
+    virtualServerPerformAction,
 } from '../dist/index.js';
 
 const jsonResponse = (body = {}, status = 200) =>
@@ -30,6 +32,78 @@ test('adds the PAT authorization header to protected requests', async () => {
     assert.equal(capturedRequest.url, 'https://nodesty.com/api/users/@me');
     assert.equal(capturedRequest.headers.get('authorization'), 'PAT test-token');
     assert.equal(result.data.id, 'user-1');
+});
+
+test('raw SDK and grouped methods return undefined for 204 regardless of content type', async () => {
+    for (const contentType of [undefined, 'application/json', 'text/plain']) {
+        const client = new NodestyApiClient({
+            fetch: async () =>
+                new Response(null, {
+                    status: 204,
+                    headers: contentType ? { 'content-type': contentType } : {},
+                }),
+        });
+
+        const rawResult = await virtualServerPerformAction({
+            client: client.client,
+            path: { id: 'service-id' },
+            body: { action: 'start' },
+        });
+        const groupedResult = await client.virtualServer.performAction('service-id', {
+            action: 'start',
+        });
+
+        for (const result of [rawResult, groupedResult]) {
+            assert.equal(result.data, undefined);
+            assert.equal(result.response.status, 204);
+        }
+    }
+});
+
+test('SDK response shape stays consistent with its types when a raw client uses data style', async () => {
+    const client = createRawClient({
+        baseUrl: 'https://nodesty.com',
+        responseStyle: 'data',
+        fetch: async () => jsonResponse({ id: 'user-1' }),
+    });
+
+    const result = await userGetCurrentUser({ client });
+
+    assert.deepEqual(result.data, { id: 'user-1' });
+    assert.equal(result.response.status, 200);
+});
+
+test('serializes nullable body fields and preserves null response fields', async () => {
+    let capturedRequest;
+    const client = new NodestyApiClient({
+        fetch: async (request) => {
+            capturedRequest = request;
+            return request.method === 'PUT'
+                ? new Response(null, { status: 204 })
+                : jsonResponse({ companyName: null, taxId: null });
+        },
+    });
+
+    await client.firewall.updateAttackNotificationSettings('service-id', '203.0.113.10', {
+        discordWebhookURL: null,
+    });
+    assert.deepEqual(await capturedRequest.json(), { discordWebhookURL: null });
+
+    const result = await client.user.getCurrentUser();
+    assert.deepEqual(result.data, { companyName: null, taxId: null });
+});
+
+test('throws the parsed error when requested through the grouped client', async () => {
+    const error = { message: 'Service not found' };
+    const client = new NodestyApiClient({ fetch: async () => jsonResponse(error, 404) });
+
+    await assert.rejects(
+        client.virtualServer.getInformation('missing', { throwOnError: true }),
+        (received) => {
+            assert.deepEqual(received, error);
+            return true;
+        },
+    );
 });
 
 test('does not add authorization to public operations', async () => {

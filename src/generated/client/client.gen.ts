@@ -104,7 +104,11 @@ export const createClient = (config: Config = {}): Client => {
                     ? getParseAs(response.headers.get('Content-Type'))
                     : opts.parseAs) ?? 'json';
 
-            if (response.status === 204 || response.headers.get('Content-Length') === '0') {
+            if (response.status === 204) {
+                return opts.responseStyle === 'data' ? undefined : { data: undefined, ...result };
+            }
+
+            if (response.headers.get('Content-Length') === '0') {
                 let emptyData: any;
                 switch (parseAs) {
                     case 'arrayBuffer':

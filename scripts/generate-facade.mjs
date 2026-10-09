@@ -81,7 +81,7 @@ const categoryClasses = categories
                 const argumentsList = [
                     ...pathArguments,
                     bodyArgument,
-                    `options?: FacadeOptions<${operation.dataType}>`,
+                    `options?: FacadeOptions<${operation.dataType}, ThrowOnError>`,
                 ]
                     .filter(Boolean)
                     .join(', ');
@@ -96,12 +96,12 @@ const categoryClasses = categories
                     .filter(Boolean)
                     .join(',\n            ');
 
-                return `    public ${operation.methodName}(
+                return `    public ${operation.methodName}<ThrowOnError extends boolean = false>(
         ${argumentsList}
-    ): Promise<Awaited<ReturnType<typeof ${operation.functionName}>>> {
-        return normalizeResponse(${operation.functionName}({
+    ): ReturnType<typeof ${operation.functionName}<ThrowOnError>> {
+        return ${operation.functionName}<ThrowOnError>({
             ${requestFields}
-        }));
+        });
     }`;
             })
             .join('\n\n');
@@ -133,17 +133,7 @@ ${typeImports}
 } from './types.gen';
 import type { Options as SdkOptions } from './sdk.gen';
 
-type FacadeOptions<TData extends TDataShape> = Omit<SdkOptions<TData>, 'body' | 'client' | 'path'>;
-
-const normalizeResponse = async <T>(request: T): Promise<Awaited<T>> => {
-    const result = await request;
-    if (!result || typeof result !== 'object' || !('response' in result)) {
-        return result as Awaited<T>;
-    }
-
-    const response = result.response as { status?: number };
-    return (response.status === 204 ? { ...result, data: undefined } : result) as Awaited<T>;
-};
+type FacadeOptions<TData extends TDataShape, ThrowOnError extends boolean = false> = Omit<SdkOptions<TData, ThrowOnError>, 'body' | 'client' | 'path'>;
 
 ${categoryClasses}
 
