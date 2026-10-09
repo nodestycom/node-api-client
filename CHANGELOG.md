@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [3.1.1](https://github.com/nodestycom/node-api-client/compare/v3.1.0...v3.1.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **api:** align generated SDK with OpenAPI and use Node 24 ([bae664f](https://github.com/nodestycom/node-api-client/commit/bae664fde0c9d4b1555d0b7612b7ca1d2ae20eba))
+
 ## [3.1.0](https://github.com/nodestycom/node-api-client/compare/v3.0.0...v3.1.0) (2026-08-08)
 
 
