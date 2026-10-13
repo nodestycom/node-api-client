@@ -38,6 +38,9 @@ import type {
     FirewallUpdateAttackNotificationSettingsData,
     FirewallUpdateAttackNotificationSettingsResponses,
     FirewallUpdateAttackNotificationSettingsErrors,
+    FirewallGetLiveTrafficData,
+    FirewallGetLiveTrafficResponses,
+    FirewallGetLiveTrafficErrors,
     FirewallResetReverseDnsData,
     FirewallResetReverseDnsResponses,
     FirewallResetReverseDnsErrors,
@@ -89,6 +92,21 @@ import type {
     VirtualServerReinstallData,
     VirtualServerReinstallResponses,
     VirtualServerReinstallErrors,
+    VirtualServerGetPowerSchedulesData,
+    VirtualServerGetPowerSchedulesResponses,
+    VirtualServerGetPowerSchedulesErrors,
+    VirtualServerCreatePowerScheduleData,
+    VirtualServerCreatePowerScheduleResponses,
+    VirtualServerCreatePowerScheduleErrors,
+    VirtualServerDeletePowerScheduleData,
+    VirtualServerDeletePowerScheduleResponses,
+    VirtualServerDeletePowerScheduleErrors,
+    VirtualServerUpdatePowerScheduleData,
+    VirtualServerUpdatePowerScheduleResponses,
+    VirtualServerUpdatePowerScheduleErrors,
+    VirtualServerRunPowerScheduleNowData,
+    VirtualServerRunPowerScheduleNowResponses,
+    VirtualServerRunPowerScheduleNowErrors,
     VirtualServerGetTasksData,
     VirtualServerGetTasksResponses,
     VirtualServerGetTasksErrors,
@@ -107,6 +125,10 @@ import type {
     BillingMakePaymentData,
     BillingMakePaymentResponses,
     BillingMakePaymentErrors,
+    BillingBulkPayWithBalanceData,
+    BillingBulkPayWithBalanceResponses,
+    BillingPreviewBulkPaymentData,
+    BillingPreviewBulkPaymentResponses,
     UserGetReferralCodeData,
     UserGetReferralCodeResponses,
     UserGetSessionsData,
@@ -454,6 +476,30 @@ export const firewallUpdateAttackNotificationSettings = <ThrowOnError extends bo
 };
 
 /**
+ * Get Live Traffic
+ * Get the current allowed and blocked traffic for an IP address protected by the advanced firewall on a Virtual or Dedicated Server
+ */
+export const firewallGetLiveTraffic = <ThrowOnError extends boolean = false>(
+    options: Options<FirewallGetLiveTrafficData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        FirewallGetLiveTrafficResponses,
+        FirewallGetLiveTrafficErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/firewall/{ip}/metrics',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
  * Reset Reverse DNS
  * Reset reverse DNS (rDNS) for a specific IP address on a Virtual or Dedicated Server
  */
@@ -579,7 +625,7 @@ export const firewallDeleteRule = <ThrowOnError extends boolean = false>(
 
 /**
  * Get Statistics
- * Get nShield statistics for a specific IP address on a Virtual or Dedicated Server
+ * Get the firewall traffic history for a specific IP address on a Virtual or Dedicated Server
  */
 export const firewallGetStatistics = <ThrowOnError extends boolean = false>(
     options: Options<FirewallGetStatisticsData, ThrowOnError>,
@@ -882,6 +928,130 @@ export const virtualServerReinstall = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Get Power Schedules
+ * List the scheduled power actions of a Virtual Server and its last 20 runs
+ */
+export const virtualServerGetPowerSchedules = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerGetPowerSchedulesData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        VirtualServerGetPowerSchedulesResponses,
+        VirtualServerGetPowerSchedulesErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Create Power Schedule
+ * Schedule a power action (START, SHUTDOWN, REBOOT or STOP) on a Virtual Server. mode WEEKLY takes days (1 = Monday) and minute after midnight, INTERVAL takes intervalHours and minute past the hour, ONCE takes runAt, CRON takes a five-field cron expression. Power actions on one server, across all its enabled schedules, must be at least 15 minutes apart.
+ */
+export const virtualServerCreatePowerSchedule = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerCreatePowerScheduleData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        VirtualServerCreatePowerScheduleResponses,
+        VirtualServerCreatePowerScheduleErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Delete Power Schedule
+ * Delete a power schedule; its past runs stay in the history
+ */
+export const virtualServerDeletePowerSchedule = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerDeletePowerScheduleData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).delete<
+        VirtualServerDeletePowerScheduleResponses,
+        VirtualServerDeletePowerScheduleErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules/{scheduleId}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Update Power Schedule
+ * Replace a power schedule with a new rule (same body as creating one) or send only { enabled }
+ */
+export const virtualServerUpdatePowerSchedule = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerUpdatePowerScheduleData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).patch<
+        VirtualServerUpdatePowerScheduleResponses,
+        VirtualServerUpdatePowerScheduleErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules/{scheduleId}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Run Power Schedule Now
+ * Run a power schedule once right away. Skipped when the server is already in the target state or busy. At most 3 runs per minute per service.
+ */
+export const virtualServerRunPowerScheduleNow = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerRunPowerScheduleNowData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        VirtualServerRunPowerScheduleNowResponses,
+        VirtualServerRunPowerScheduleNowErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules/{scheduleId}/run',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
  * Get Tasks
  * Get VPS tasks
  */
@@ -1059,6 +1229,62 @@ export const billingMakePayment = <ThrowOnError extends boolean = false>(
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
+        },
+    });
+};
+
+/**
+ * Bulk Pay With Balance
+ * Pay several invoices from the account balance. expectedTotal must equal the total returned by the preview.
+ */
+export const billingBulkPayWithBalance = <ThrowOnError extends boolean = false>(
+    options?: Options<BillingBulkPayWithBalanceData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).post<
+        BillingBulkPayWithBalanceResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/users/@me/invoices/bulk/balance',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+        },
+    });
+};
+
+/**
+ * Preview Bulk Payment
+ * Get what is still due on several invoices before paying them together
+ */
+export const billingPreviewBulkPayment = <ThrowOnError extends boolean = false>(
+    options?: Options<BillingPreviewBulkPaymentData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).post<
+        BillingPreviewBulkPaymentResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/users/@me/invoices/bulk/preview',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
         },
     });
 };
