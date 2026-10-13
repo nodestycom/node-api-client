@@ -678,6 +678,10 @@ export type FirewallGetAttackLogsResponses = {
          */
         peak?: number;
         /**
+         * Peak packets per second, where the protection reports it
+         */
+        peakPps?: number;
+        /**
          * Timestamp when the attack started
          */
         startedAt?: number;
@@ -732,6 +736,10 @@ export type FirewallGetAttackNotificationSettingsResponses = {
          * Whether email notifications are enabled for attack alerts
          */
         emailNotification?: boolean;
+        /**
+         * Whether attacks appear in the dashboard notification center
+         */
+        inAppNotification?: boolean;
     };
 };
 
@@ -751,6 +759,10 @@ export type FirewallUpdateAttackNotificationSettingsData = {
          * Whether email notifications are enabled
          */
         emailNotification?: boolean;
+        /**
+         * Whether attacks appear in the dashboard notification center
+         */
+        inAppNotification?: boolean;
     };
     path: {
         /**
@@ -791,11 +803,66 @@ export type FirewallUpdateAttackNotificationSettingsResponses = {
          * Whether email notifications are enabled
          */
         emailNotification?: boolean;
+        /**
+         * Whether attacks appear in the dashboard notification center
+         */
+        inAppNotification?: boolean;
     };
 };
 
 export type FirewallUpdateAttackNotificationSettingsResponse =
     FirewallUpdateAttackNotificationSettingsResponses[keyof FirewallUpdateAttackNotificationSettingsResponses];
+
+export type FirewallGetLiveTrafficData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * IP Address
+         */
+        ip: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/firewall/{ip}/metrics';
+};
+
+export type FirewallGetLiveTrafficErrors = {
+    /**
+     * Service or IP not found, or the IP is not on the advanced firewall
+     */
+    404: unknown;
+};
+
+export type FirewallGetLiveTrafficResponses = {
+    /**
+     * Current traffic counters
+     */
+    200: {
+        /**
+         * Blocked traffic in bits per second
+         */
+        dropBps?: number;
+        /**
+         * Blocked packets per second
+         */
+        dropPps?: number;
+        /**
+         * Allowed traffic in bits per second
+         */
+        passBps?: number;
+        /**
+         * Allowed packets per second
+         */
+        passPps?: number;
+        timestamp?: number;
+    };
+};
+
+export type FirewallGetLiveTrafficResponse =
+    FirewallGetLiveTrafficResponses[keyof FirewallGetLiveTrafficResponses];
 
 export type FirewallResetReverseDnsData = {
     body?: never;
@@ -1036,7 +1103,12 @@ export type FirewallGetStatisticsData = {
          */
         ip: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * Time window, for addresses on the advanced firewall only. Other addresses always return the last 7 days
+         */
+        range?: '1h' | '6h' | '24h' | '7d';
+    };
     url: '/api/services/{id}/firewall/{ip}/stats';
 };
 
@@ -1054,7 +1126,7 @@ export type FirewallGetStatisticsError =
 
 export type FirewallGetStatisticsResponses = {
     /**
-     * nShield statistics for the specified IP address
+     * Traffic history for the specified IP address, oldest first
      */
     200: Array<{
         /**
@@ -1062,13 +1134,13 @@ export type FirewallGetStatisticsResponses = {
          */
         timestamp?: number;
         /**
-         * Total traffic that was dropped by the nShield
+         * Traffic that was dropped by the firewall, in bytes per second. Null where no data was recorded
          */
-        totalDropTraffic?: string;
+        totalDropTraffic?: number | null;
         /**
-         * Total traffic that passed through the nShield
+         * Traffic that passed through the firewall, in bytes per second. Null where no data was recorded
          */
-        totalPassTraffic?: string;
+        totalPassTraffic?: number | null;
     }>;
 };
 
@@ -1584,6 +1656,10 @@ export type VirtualServerGetInformationResponses = {
          */
         disk?: number;
         /**
+         * Indicates if there are pending changes for the VPS. If true, the VPS may require a restart to apply changes.
+         */
+        hasPendingChanges?: boolean;
+        /**
          * Hostname of the VPS
          */
         hostname?: string;
@@ -1722,6 +1798,178 @@ export type VirtualServerReinstallResponses = {
 
 export type VirtualServerReinstallResponse =
     VirtualServerReinstallResponses[keyof VirtualServerReinstallResponses];
+
+export type VirtualServerGetPowerSchedulesData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules';
+};
+
+export type VirtualServerGetPowerSchedulesErrors = {
+    /**
+     * VPS not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerGetPowerSchedulesResponses = {
+    /**
+     * Schedules and recent runs
+     */
+    200: unknown;
+};
+
+export type VirtualServerCreatePowerScheduleData = {
+    body: {
+        action: 'START' | 'SHUTDOWN' | 'REBOOT' | 'STOP';
+        cron?: string;
+        days?: Array<number>;
+        enabled?: boolean;
+        forceAfterMinutes?: 5 | 10 | 15 | 30;
+        intervalHours?: 1 | 2 | 3 | 4 | 6 | 8 | 12;
+        minute?: number;
+        mode: 'WEEKLY' | 'INTERVAL' | 'ONCE' | 'CRON';
+        /**
+         * Optional label, up to 60 characters
+         */
+        name?: string;
+        runAt?: string;
+        timezone: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules';
+};
+
+export type VirtualServerCreatePowerScheduleErrors = {
+    /**
+     * Invalid rule, runs too close together or the limit of 10 schedules reached
+     */
+    400: unknown;
+    /**
+     * VPS not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerCreatePowerScheduleResponses = {
+    /**
+     * The created schedule
+     */
+    200: unknown;
+};
+
+export type VirtualServerDeletePowerScheduleData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Schedule ID
+         */
+        scheduleId: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules/{scheduleId}';
+};
+
+export type VirtualServerDeletePowerScheduleErrors = {
+    /**
+     * VPS or schedule not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerDeletePowerScheduleResponses = {
+    /**
+     * Deleted
+     */
+    204: void;
+};
+
+export type VirtualServerDeletePowerScheduleResponse =
+    VirtualServerDeletePowerScheduleResponses[keyof VirtualServerDeletePowerScheduleResponses];
+
+export type VirtualServerUpdatePowerScheduleData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Schedule ID
+         */
+        scheduleId: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules/{scheduleId}';
+};
+
+export type VirtualServerUpdatePowerScheduleErrors = {
+    /**
+     * Invalid rule
+     */
+    400: unknown;
+    /**
+     * VPS or schedule not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerUpdatePowerScheduleResponses = {
+    /**
+     * The updated schedule
+     */
+    200: unknown;
+};
+
+export type VirtualServerRunPowerScheduleNowData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Schedule ID
+         */
+        scheduleId: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules/{scheduleId}/run';
+};
+
+export type VirtualServerRunPowerScheduleNowErrors = {
+    /**
+     * VPS or schedule not found
+     */
+    404: unknown;
+    /**
+     * Too many manual runs
+     */
+    429: unknown;
+};
+
+export type VirtualServerRunPowerScheduleNowResponses = {
+    /**
+     * The run result: { status: SUCCESS | SKIPPED | FAILED, reason? }
+     */
+    200: unknown;
+};
 
 export type VirtualServerGetTasksData = {
     body?: never;
@@ -2236,6 +2484,62 @@ export type BillingMakePaymentResponses = {
 
 export type BillingMakePaymentResponse =
     BillingMakePaymentResponses[keyof BillingMakePaymentResponses];
+
+export type BillingBulkPayWithBalanceData = {
+    body?: {
+        expectedTotal: number;
+        invoiceIds: Array<number>;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/users/@me/invoices/bulk/balance';
+};
+
+export type BillingBulkPayWithBalanceResponses = {
+    /**
+     * Result per invoice
+     */
+    200: {
+        results?: Array<{
+            amount?: number;
+            invoiceId?: number;
+            status?: 'paid' | 'failed';
+        }>;
+    };
+};
+
+export type BillingBulkPayWithBalanceResponse =
+    BillingBulkPayWithBalanceResponses[keyof BillingBulkPayWithBalanceResponses];
+
+export type BillingPreviewBulkPaymentData = {
+    body?: {
+        invoiceIds: Array<number>;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/users/@me/invoices/bulk/preview';
+};
+
+export type BillingPreviewBulkPaymentResponses = {
+    /**
+     * Payable invoices with the amount still due, invoices that cannot be paid, and the balance
+     */
+    200: {
+        balance?: number;
+        invoices?: Array<{
+            amount?: number;
+            dueDate?: string;
+            id?: number;
+            isAddFunds?: boolean;
+            total?: number;
+        }>;
+        total?: number;
+        unavailable?: Array<number>;
+    };
+};
+
+export type BillingPreviewBulkPaymentResponse =
+    BillingPreviewBulkPaymentResponses[keyof BillingPreviewBulkPaymentResponses];
 
 export type UserGetReferralCodeData = {
     body?: never;

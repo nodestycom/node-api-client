@@ -906,6 +906,11 @@
                                                 "example": 449455557,
                                                 "type": "integer"
                                             },
+                                            "peakPps": {
+                                                "description": "Peak packets per second, where the protection reports it",
+                                                "example": 20419,
+                                                "type": "integer"
+                                            },
                                             "startedAt": {
                                                 "description": "Timestamp when the attack started",
                                                 "example": 1700000000000,
@@ -982,6 +987,11 @@
                                             "description": "Whether email notifications are enabled for attack alerts",
                                             "example": true,
                                             "type": "boolean"
+                                        },
+                                        "inAppNotification": {
+                                            "description": "Whether attacks appear in the dashboard notification center",
+                                            "example": true,
+                                            "type": "boolean"
                                         }
                                     },
                                     "type": "object"
@@ -1040,6 +1050,11 @@
                                         "description": "Whether email notifications are enabled",
                                         "example": true,
                                         "type": "boolean"
+                                    },
+                                    "inAppNotification": {
+                                        "description": "Whether attacks appear in the dashboard notification center",
+                                        "example": true,
+                                        "type": "boolean"
                                     }
                                 },
                                 "required": [],
@@ -1062,6 +1077,11 @@
                                         },
                                         "emailNotification": {
                                             "description": "Whether email notifications are enabled",
+                                            "example": true,
+                                            "type": "boolean"
+                                        },
+                                        "inAppNotification": {
+                                            "description": "Whether attacks appear in the dashboard notification center",
                                             "example": true,
                                             "type": "boolean"
                                         }
@@ -1088,6 +1108,66 @@
                 "summary": "Update Attack Notification Settings",
                 "tags": ["Firewall"]
             }
+        },
+        "/api/services/{id}/firewall/{ip}/metrics": {
+            "get": {
+                "description": "Get the current allowed and blocked traffic for an IP address protected by the advanced firewall on a Virtual or Dedicated Server",
+                "operationId": "firewallGetLiveTraffic",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "IP Address",
+                        "in": "path",
+                        "name": "ip",
+                        "required": true,
+                        "schema": { "example": "82.25.42.10", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dropBps": {
+                                            "description": "Blocked traffic in bits per second",
+                                            "type": "number"
+                                        },
+                                        "dropPps": {
+                                            "description": "Blocked packets per second",
+                                            "type": "number"
+                                        },
+                                        "passBps": {
+                                            "description": "Allowed traffic in bits per second",
+                                            "type": "number"
+                                        },
+                                        "passPps": {
+                                            "description": "Allowed packets per second",
+                                            "type": "number"
+                                        },
+                                        "timestamp": { "example": 1700000000000, "type": "integer" }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Current traffic counters"
+                    },
+                    "404": {
+                        "description": "Service or IP not found, or the IP is not on the advanced firewall"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Live Traffic",
+                "tags": ["Firewall"]
+            },
+            "parameters": []
         },
         "/api/services/{id}/firewall/{ip}/rdns": {
             "delete": {
@@ -1372,7 +1452,7 @@
         },
         "/api/services/{id}/firewall/{ip}/stats": {
             "get": {
-                "description": "Get nShield statistics for a specific IP address on a Virtual or Dedicated Server",
+                "description": "Get the firewall traffic history for a specific IP address on a Virtual or Dedicated Server",
                 "operationId": "firewallGetStatistics",
                 "parameters": [
                     {
@@ -1388,6 +1468,17 @@
                         "name": "ip",
                         "required": true,
                         "schema": { "example": "77.90.14.1", "type": "string" }
+                    },
+                    {
+                        "description": "Time window, for addresses on the advanced firewall only. Other addresses always return the last 7 days",
+                        "in": "query",
+                        "name": "range",
+                        "required": false,
+                        "schema": {
+                            "default": "7d",
+                            "enum": ["1h", "6h", "24h", "7d"],
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -1404,14 +1495,14 @@
                                                 "type": "integer"
                                             },
                                             "totalDropTraffic": {
-                                                "description": "Total traffic that was dropped by the nShield",
-                                                "example": "2048576",
-                                                "type": "string"
+                                                "description": "Traffic that was dropped by the firewall, in bytes per second. Null where no data was recorded",
+                                                "example": 2048576,
+                                                "type": ["number", "null"]
                                             },
                                             "totalPassTraffic": {
-                                                "description": "Total traffic that passed through the nShield",
-                                                "example": "10248576",
-                                                "type": "string"
+                                                "description": "Traffic that passed through the firewall, in bytes per second. Null where no data was recorded",
+                                                "example": 10248576,
+                                                "type": ["number", "null"]
                                             }
                                         },
                                         "type": "object"
@@ -1420,7 +1511,7 @@
                                 }
                             }
                         },
-                        "description": "nShield statistics for the specified IP address"
+                        "description": "Traffic history for the specified IP address, oldest first"
                     },
                     "404": {
                         "content": {
@@ -2080,6 +2171,11 @@
                                             "example": 10737418240,
                                             "type": "integer"
                                         },
+                                        "hasPendingChanges": {
+                                            "description": "Indicates if there are pending changes for the VPS. If true, the VPS may require a restart to apply changes.",
+                                            "example": false,
+                                            "type": "boolean"
+                                        },
                                         "hostname": {
                                             "description": "Hostname of the VPS",
                                             "example": "vps.example.com",
@@ -2285,6 +2381,185 @@
                 },
                 "security": [{ "personalAccessToken": [] }],
                 "summary": "Reinstall",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/schedules": {
+            "get": {
+                "description": "List the scheduled power actions of a Virtual Server and its last 20 runs",
+                "operationId": "virtualServerGetPowerSchedules",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "Schedules and recent runs" },
+                    "404": { "description": "VPS not found" }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Get Power Schedules",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": [],
+            "post": {
+                "description": "Schedule a power action (START, SHUTDOWN, REBOOT or STOP) on a Virtual Server. mode WEEKLY takes days (1 = Monday) and minute after midnight, INTERVAL takes intervalHours and minute past the hour, ONCE takes runAt, CRON takes a five-field cron expression. Power actions on one server, across all its enabled schedules, must be at least 15 minutes apart.",
+                "operationId": "virtualServerCreatePowerSchedule",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "action": {
+                                        "enum": ["START", "SHUTDOWN", "REBOOT", "STOP"],
+                                        "type": "string"
+                                    },
+                                    "cron": { "example": "0 4 * * 1-5", "type": "string" },
+                                    "days": {
+                                        "items": { "maximum": 7, "minimum": 1, "type": "integer" },
+                                        "type": "array"
+                                    },
+                                    "enabled": { "default": true, "type": "boolean" },
+                                    "forceAfterMinutes": {
+                                        "enum": [5, 10, 15, 30],
+                                        "type": "integer"
+                                    },
+                                    "intervalHours": {
+                                        "enum": [1, 2, 3, 4, 6, 8, 12],
+                                        "type": "integer"
+                                    },
+                                    "minute": { "maximum": 1439, "minimum": 0, "type": "integer" },
+                                    "mode": {
+                                        "enum": ["WEEKLY", "INTERVAL", "ONCE", "CRON"],
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "description": "Optional label, up to 60 characters",
+                                        "type": "string"
+                                    },
+                                    "runAt": { "format": "date-time", "type": "string" },
+                                    "timezone": { "example": "Europe/Istanbul", "type": "string" }
+                                },
+                                "required": ["action", "mode", "timezone"],
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": { "description": "The created schedule" },
+                    "400": {
+                        "description": "Invalid rule, runs too close together or the limit of 10 schedules reached"
+                    },
+                    "404": { "description": "VPS not found" }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Create Power Schedule",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/schedules/{scheduleId}": {
+            "delete": {
+                "description": "Delete a power schedule; its past runs stay in the history",
+                "operationId": "virtualServerDeletePowerSchedule",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "Schedule ID",
+                        "in": "path",
+                        "name": "scheduleId",
+                        "required": true,
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Deleted" },
+                    "404": { "description": "VPS or schedule not found" }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Delete Power Schedule",
+                "tags": ["Virtual Server"]
+            },
+            "parameters": [],
+            "patch": {
+                "description": "Replace a power schedule with a new rule (same body as creating one) or send only { enabled }",
+                "operationId": "virtualServerUpdatePowerSchedule",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "Schedule ID",
+                        "in": "path",
+                        "name": "scheduleId",
+                        "required": true,
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "The updated schedule" },
+                    "400": { "description": "Invalid rule" },
+                    "404": { "description": "VPS or schedule not found" }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Update Power Schedule",
+                "tags": ["Virtual Server"]
+            }
+        },
+        "/api/services/{id}/vps/schedules/{scheduleId}/run": {
+            "parameters": [],
+            "post": {
+                "description": "Run a power schedule once right away. Skipped when the server is already in the target state or busy. At most 3 runs per minute per service.",
+                "operationId": "virtualServerRunPowerScheduleNow",
+                "parameters": [
+                    {
+                        "description": "Service ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "example": "1", "type": "string" }
+                    },
+                    {
+                        "description": "Schedule ID",
+                        "in": "path",
+                        "name": "scheduleId",
+                        "required": true,
+                        "schema": { "type": "string" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The run result: { status: SUCCESS | SKIPPED | FAILED, reason? }"
+                    },
+                    "404": { "description": "VPS or schedule not found" },
+                    "429": { "description": "Too many manual runs" }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Run Power Schedule Now",
                 "tags": ["Virtual Server"]
             }
         },
@@ -2998,6 +3273,133 @@
                 },
                 "security": [{ "personalAccessToken": [] }],
                 "summary": "Make Payment",
+                "tags": ["Billing"]
+            }
+        },
+        "/api/users/@me/invoices/bulk/balance": {
+            "parameters": [],
+            "post": {
+                "description": "Pay several invoices from the account balance. expectedTotal must equal the total returned by the preview.",
+                "operationId": "billingBulkPayWithBalance",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "expectedTotal": { "example": 40, "type": "number" },
+                                    "invoiceIds": {
+                                        "example": [1, 2, 3],
+                                        "items": { "type": "integer" },
+                                        "type": "array"
+                                    }
+                                },
+                                "required": ["invoiceIds", "expectedTotal"],
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "results": {
+                                            "items": {
+                                                "properties": {
+                                                    "amount": { "example": 40, "type": "number" },
+                                                    "invoiceId": {
+                                                        "example": 1,
+                                                        "type": "integer"
+                                                    },
+                                                    "status": {
+                                                        "enum": ["paid", "failed"],
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Result per invoice"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Bulk Pay With Balance",
+                "tags": ["Billing"]
+            }
+        },
+        "/api/users/@me/invoices/bulk/preview": {
+            "parameters": [],
+            "post": {
+                "description": "Get what is still due on several invoices before paying them together",
+                "operationId": "billingPreviewBulkPayment",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "invoiceIds": {
+                                        "example": [1, 2, 3],
+                                        "items": { "type": "integer" },
+                                        "type": "array"
+                                    }
+                                },
+                                "required": ["invoiceIds"],
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "balance": { "example": 100, "type": "number" },
+                                        "invoices": {
+                                            "items": {
+                                                "properties": {
+                                                    "amount": { "example": 40, "type": "number" },
+                                                    "dueDate": {
+                                                        "example": "2026-10-20",
+                                                        "type": "string"
+                                                    },
+                                                    "id": { "example": 1, "type": "integer" },
+                                                    "isAddFunds": {
+                                                        "example": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "total": { "example": 50, "type": "number" }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "total": { "example": 40, "type": "number" },
+                                        "unavailable": {
+                                            "items": { "type": "integer" },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Payable invoices with the amount still due, invoices that cannot be paid, and the balance"
+                    }
+                },
+                "security": [{ "personalAccessToken": [] }],
+                "summary": "Preview Bulk Payment",
                 "tags": ["Billing"]
             }
         },
