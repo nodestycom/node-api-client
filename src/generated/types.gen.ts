@@ -232,13 +232,21 @@ export type UserGetServicesResponses = {
          */
         nextDueDate?: number;
         /**
+         * Name the service owner gave the service
+         */
+        nickname?: string | null;
+        /**
          * Indicates if the current user is the owner of the service
          */
         owner?: boolean;
         /**
-         * Password associated with the service
+         * Password associated with the service; empty on a team service when your team permissions do not include panel login (hosting) or reinstall (servers)
          */
         password?: string | null;
+        /**
+         * What the current user may do on a service shared by a team, as a bit field: 1 power, 2 console, 4 backups, 8 reinstall and passwords, 16 firewall, 32 panel login, 64 reinstall after a team owner or admin approves a request, 128 take backups and restore one after approval. Your own services have the first six bits (63).
+         */
+        permissions?: number;
         /**
          * Product ID associated with the service
          */
@@ -267,9 +275,13 @@ export type UserGetServicesResponses = {
          */
         suspensionReason?: string | null;
         /**
-         * Team ID if the service is associated with a team, otherwise null
+         * The first team the service is shared with, otherwise null; see teamIds
          */
         teamId?: number | null;
+        /**
+         * Every team of yours the service is shared with
+         */
+        teamIds?: Array<number>;
         /**
          * Username associated with the service
          */
@@ -282,6 +294,85 @@ export type UserGetServicesResponses = {
 };
 
 export type UserGetServicesResponse = UserGetServicesResponses[keyof UserGetServicesResponses];
+
+export type BillingGetAutoPaySettingsData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/autopay';
+};
+
+export type BillingGetAutoPaySettingsErrors = {
+    /**
+     * Service not found
+     */
+    404: unknown;
+};
+
+export type BillingGetAutoPaySettingsResponses = {
+    /**
+     * Auto-Pay settings
+     */
+    200: {
+        daysBeforeDue?: number;
+        enabled?: boolean;
+        logs?: Array<{
+            amount?: number;
+            createdAt?: string;
+            currency?: string;
+            errorMessage?: string | null;
+            invoiceId?: number;
+            paymentMethodUsed?: 'CARD' | 'BALANCE' | 'FIRST_AVAILABLE';
+            status?: 'SUCCESS' | 'FAILED' | 'CHARGED_BUT_SYNC_FAILED';
+        }>;
+        paymentMethod?: 'CARD' | 'BALANCE' | 'FIRST_AVAILABLE';
+    };
+};
+
+export type BillingGetAutoPaySettingsResponse =
+    BillingGetAutoPaySettingsResponses[keyof BillingGetAutoPaySettingsResponses];
+
+export type BillingUpdateAutoPaySettingsData = {
+    body: {
+        daysBeforeDue?: number;
+        enabled: boolean;
+        paymentMethod?: 'CARD' | 'BALANCE' | 'FIRST_AVAILABLE';
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/autopay';
+};
+
+export type BillingUpdateAutoPaySettingsErrors = {
+    /**
+     * Invalid body, or no saved card for a card payment method
+     */
+    400: unknown;
+    /**
+     * Service not found
+     */
+    404: unknown;
+};
+
+export type BillingUpdateAutoPaySettingsResponses = {
+    /**
+     * Auto-Pay settings saved
+     */
+    204: void;
+};
+
+export type BillingUpdateAutoPaySettingsResponse =
+    BillingUpdateAutoPaySettingsResponses[keyof BillingUpdateAutoPaySettingsResponses];
 
 export type DedicatedServerPerformActionData = {
     /**
@@ -678,6 +769,10 @@ export type FirewallGetAttackLogsResponses = {
          */
         peak?: number;
         /**
+         * Peak packets per second, where the protection reports it
+         */
+        peakPps?: number;
+        /**
          * Timestamp when the attack started
          */
         startedAt?: number;
@@ -732,6 +827,10 @@ export type FirewallGetAttackNotificationSettingsResponses = {
          * Whether email notifications are enabled for attack alerts
          */
         emailNotification?: boolean;
+        /**
+         * Whether attacks appear in the dashboard notification center
+         */
+        inAppNotification?: boolean;
     };
 };
 
@@ -751,6 +850,10 @@ export type FirewallUpdateAttackNotificationSettingsData = {
          * Whether email notifications are enabled
          */
         emailNotification?: boolean;
+        /**
+         * Whether attacks appear in the dashboard notification center
+         */
+        inAppNotification?: boolean;
     };
     path: {
         /**
@@ -791,11 +894,66 @@ export type FirewallUpdateAttackNotificationSettingsResponses = {
          * Whether email notifications are enabled
          */
         emailNotification?: boolean;
+        /**
+         * Whether attacks appear in the dashboard notification center
+         */
+        inAppNotification?: boolean;
     };
 };
 
 export type FirewallUpdateAttackNotificationSettingsResponse =
     FirewallUpdateAttackNotificationSettingsResponses[keyof FirewallUpdateAttackNotificationSettingsResponses];
+
+export type FirewallGetLiveTrafficData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * IP Address
+         */
+        ip: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/firewall/{ip}/metrics';
+};
+
+export type FirewallGetLiveTrafficErrors = {
+    /**
+     * Service or IP not found, or the IP is not on the advanced firewall
+     */
+    404: unknown;
+};
+
+export type FirewallGetLiveTrafficResponses = {
+    /**
+     * Current traffic counters
+     */
+    200: {
+        /**
+         * Blocked traffic in bits per second
+         */
+        dropBps?: number;
+        /**
+         * Blocked packets per second
+         */
+        dropPps?: number;
+        /**
+         * Allowed traffic in bits per second
+         */
+        passBps?: number;
+        /**
+         * Allowed packets per second
+         */
+        passPps?: number;
+        timestamp?: number;
+    };
+};
+
+export type FirewallGetLiveTrafficResponse =
+    FirewallGetLiveTrafficResponses[keyof FirewallGetLiveTrafficResponses];
 
 export type FirewallResetReverseDnsData = {
     body?: never;
@@ -1036,7 +1194,12 @@ export type FirewallGetStatisticsData = {
          */
         ip: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * Time window, for addresses on the advanced firewall only. Other addresses always return the last 7 days
+         */
+        range?: '1h' | '6h' | '24h' | '7d';
+    };
     url: '/api/services/{id}/firewall/{ip}/stats';
 };
 
@@ -1047,6 +1210,10 @@ export type FirewallGetStatisticsErrors = {
     404: {
         message?: string;
     };
+    /**
+     * The advanced firewall could not be reached
+     */
+    502: unknown;
 };
 
 export type FirewallGetStatisticsError =
@@ -1054,7 +1221,7 @@ export type FirewallGetStatisticsError =
 
 export type FirewallGetStatisticsResponses = {
     /**
-     * nShield statistics for the specified IP address
+     * Traffic history for the specified IP address, oldest first
      */
     200: Array<{
         /**
@@ -1062,18 +1229,359 @@ export type FirewallGetStatisticsResponses = {
          */
         timestamp?: number;
         /**
-         * Total traffic that was dropped by the nShield
+         * Traffic that was dropped by the firewall, in bytes per second. Null where no data was recorded
          */
-        totalDropTraffic?: string;
+        totalDropTraffic?: number | null;
         /**
-         * Total traffic that passed through the nShield
+         * Traffic that passed through the firewall, in bytes per second. Null where no data was recorded
          */
-        totalPassTraffic?: string;
+        totalPassTraffic?: number | null;
     }>;
 };
 
 export type FirewallGetStatisticsResponse =
     FirewallGetStatisticsResponses[keyof FirewallGetStatisticsResponses];
+
+export type MailHostingListAliasesData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/aliases';
+};
+
+export type MailHostingListAliasesErrors = {
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+};
+
+export type MailHostingListAliasesResponses = {
+    /**
+     * Aliases
+     */
+    200: Array<{
+        address?: string;
+        displayName?: string;
+        features?: {
+            allUsers?: boolean;
+            catchAll?: boolean;
+            internalOnly?: boolean;
+            sendFrom?: boolean;
+            showInGal?: boolean;
+        };
+        targets?: Array<string>;
+        username?: string;
+    }>;
+};
+
+export type MailHostingListAliasesResponse =
+    MailHostingListAliasesResponses[keyof MailHostingListAliasesResponses];
+
+export type MailHostingCreateAliasData = {
+    body: {
+        /**
+         * Up to 100 characters
+         */
+        displayName?: string;
+        /**
+         * catchAll also receives mail sent to addresses that do not exist on the domain; showInGal lists the alias in the address book; internalOnly accepts mail only from senders on the domain; sendFrom lets the target mailboxes send as the alias; allUsers delivers to every mailbox on the domain
+         */
+        features?: {
+            allUsers?: boolean;
+            catchAll?: boolean;
+            internalOnly?: boolean;
+            sendFrom?: boolean;
+            showInGal?: boolean;
+        };
+        targets: Array<string>;
+        /**
+         * The part before the @
+         */
+        username: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/aliases';
+};
+
+export type MailHostingCreateAliasErrors = {
+    /**
+     * Invalid body, or the mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingCreateAliasResponses = {
+    /**
+     * Alias created
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingCreateAliasResponse =
+    MailHostingCreateAliasResponses[keyof MailHostingCreateAliasResponses];
+
+export type MailHostingDeleteAliasData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Alias name, the part before the @
+         */
+        alias: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/aliases/{alias}';
+};
+
+export type MailHostingDeleteAliasErrors = {
+    /**
+     * The mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Mail Hosting or alias not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingDeleteAliasResponses = {
+    /**
+     * Alias deleted
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingDeleteAliasResponse =
+    MailHostingDeleteAliasResponses[keyof MailHostingDeleteAliasResponses];
+
+export type MailHostingUpdateAliasData = {
+    body: {
+        /**
+         * Up to 100 characters
+         */
+        displayName?: string;
+        /**
+         * catchAll also receives mail sent to addresses that do not exist on the domain; showInGal lists the alias in the address book; internalOnly accepts mail only from senders on the domain; sendFrom lets the target mailboxes send as the alias; allUsers delivers to every mailbox on the domain
+         */
+        features?: {
+            allUsers?: boolean;
+            catchAll?: boolean;
+            internalOnly?: boolean;
+            sendFrom?: boolean;
+            showInGal?: boolean;
+        };
+        targets?: Array<string>;
+        /**
+         * New name, the part before the @
+         */
+        username?: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Alias name, the part before the @
+         */
+        alias: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/aliases/{alias}';
+};
+
+export type MailHostingUpdateAliasErrors = {
+    /**
+     * Invalid body, or the mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Mail Hosting or alias not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingUpdateAliasResponses = {
+    /**
+     * Alias updated
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingUpdateAliasResponse =
+    MailHostingUpdateAliasResponses[keyof MailHostingUpdateAliasResponses];
+
+export type MailHostingListDomainAliasesData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/domain-aliases';
+};
+
+export type MailHostingListDomainAliasesErrors = {
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+};
+
+export type MailHostingListDomainAliasesResponses = {
+    /**
+     * Domain aliases
+     */
+    200: Array<{
+        domain?: string;
+    }>;
+};
+
+export type MailHostingListDomainAliasesResponse =
+    MailHostingListDomainAliasesResponses[keyof MailHostingListDomainAliasesResponses];
+
+export type MailHostingAddDomainAliasData = {
+    body: {
+        domain: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/domain-aliases';
+};
+
+export type MailHostingAddDomainAliasErrors = {
+    /**
+     * Invalid body, or the mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingAddDomainAliasResponses = {
+    /**
+     * Domain alias added
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingAddDomainAliasResponse =
+    MailHostingAddDomainAliasResponses[keyof MailHostingAddDomainAliasResponses];
+
+export type MailHostingRemoveDomainAliasData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Domain alias
+         */
+        alias: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/domain-aliases/{alias}';
+};
+
+export type MailHostingRemoveDomainAliasErrors = {
+    /**
+     * The mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Mail Hosting or domain alias not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingRemoveDomainAliasResponses = {
+    /**
+     * Domain alias removed
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingRemoveDomainAliasResponse =
+    MailHostingRemoveDomainAliasResponses[keyof MailHostingRemoveDomainAliasResponses];
 
 export type MailHostingGetInformationData = {
     body?: never;
@@ -1179,17 +1687,26 @@ export type MailHostingGetInformationResponses = {
          */
         fileStorage?: boolean;
         /**
+         * Webmail hostname
+         */
+        hostname?: string;
+        /**
+         * Indicates if MXFilter spam filtering is enabled
+         */
+        mxFilter?: boolean;
+        /**
          * Indicates if Office integration is enabled
          */
         office?: boolean;
         /**
-         * Indicates if SpamExperts is enabled
+         * Deprecated, same as mxFilter
+         * @deprecated
          */
         spamExperts?: boolean;
         /**
          * Current status of the mail hosting service
          */
-        status?: 'active' | 'pending';
+        status?: 'pending' | 'active' | 'suspended' | 'client_suspended' | 'admin_suspended';
         users?: {
             /**
              * Number of user aliases
@@ -1227,6 +1744,334 @@ export type MailHostingGetInformationResponses = {
 
 export type MailHostingGetInformationResponse =
     MailHostingGetInformationResponses[keyof MailHostingGetInformationResponses];
+
+export type MailHostingRefreshUsageStatisticsData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/refresh';
+};
+
+export type MailHostingRefreshUsageStatisticsErrors = {
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingRefreshUsageStatisticsResponses = {
+    /**
+     * Statistics refreshed
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingRefreshUsageStatisticsResponse =
+    MailHostingRefreshUsageStatisticsResponses[keyof MailHostingRefreshUsageStatisticsResponses];
+
+export type MailHostingListMailboxesData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/users';
+};
+
+export type MailHostingListMailboxesErrors = {
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+};
+
+export type MailHostingListMailboxesResponses = {
+    /**
+     * Mailboxes
+     */
+    200: Array<{
+        address?: string;
+        admin?: boolean;
+        diskLimit?: number;
+        diskUsage?: number | null;
+        displayName?: string;
+        enabled?: boolean;
+        primaryAdmin?: boolean;
+        username?: string;
+    }>;
+};
+
+export type MailHostingListMailboxesResponse =
+    MailHostingListMailboxesResponses[keyof MailHostingListMailboxesResponses];
+
+export type MailHostingCreateMailboxData = {
+    body: {
+        diskLimit?: number;
+        /**
+         * Up to 100 characters
+         */
+        displayName?: string;
+        enabled?: boolean;
+        /**
+         * 8 to 128 characters
+         */
+        password: string;
+        /**
+         * The part before the @
+         */
+        username: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/users';
+};
+
+export type MailHostingCreateMailboxErrors = {
+    /**
+     * Invalid body, or the mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Mail Hosting not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingCreateMailboxResponses = {
+    /**
+     * Mailbox created
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingCreateMailboxResponse =
+    MailHostingCreateMailboxResponses[keyof MailHostingCreateMailboxResponses];
+
+export type MailHostingDeleteMailboxData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Mailbox name, the part before the @
+         */
+        username: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/users/{username}';
+};
+
+export type MailHostingDeleteMailboxErrors = {
+    /**
+     * The mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission, or the mailbox is the primary administrator
+     */
+    403: unknown;
+    /**
+     * Mail Hosting or mailbox not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingDeleteMailboxResponses = {
+    /**
+     * Mailbox deleted
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingDeleteMailboxResponse =
+    MailHostingDeleteMailboxResponses[keyof MailHostingDeleteMailboxResponses];
+
+export type MailHostingUpdateMailboxData = {
+    body: {
+        diskLimit?: number;
+        /**
+         * Up to 100 characters
+         */
+        displayName?: string;
+        enabled?: boolean;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Mailbox name, the part before the @
+         */
+        username: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/users/{username}';
+};
+
+export type MailHostingUpdateMailboxErrors = {
+    /**
+     * Invalid body, or the mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission, or the mailbox is the primary administrator
+     */
+    403: unknown;
+    /**
+     * Mail Hosting or mailbox not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingUpdateMailboxResponses = {
+    /**
+     * Mailbox updated
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingUpdateMailboxResponse =
+    MailHostingUpdateMailboxResponses[keyof MailHostingUpdateMailboxResponses];
+
+export type MailHostingChangeMailboxPasswordData = {
+    body: {
+        /**
+         * 8 to 128 characters
+         */
+        password: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Mailbox name, the part before the @
+         */
+        username: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/mail/users/{username}/password';
+};
+
+export type MailHostingChangeMailboxPasswordErrors = {
+    /**
+     * Invalid body, or the mail server rejected the request
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission, or the mailbox is the primary administrator
+     */
+    403: unknown;
+    /**
+     * Mail Hosting or mailbox not found
+     */
+    404: unknown;
+    /**
+     * Mail server unavailable
+     */
+    502: unknown;
+};
+
+export type MailHostingChangeMailboxPasswordResponses = {
+    /**
+     * Password changed
+     */
+    200: {
+        ok?: boolean;
+    };
+};
+
+export type MailHostingChangeMailboxPasswordResponse =
+    MailHostingChangeMailboxPasswordResponses[keyof MailHostingChangeMailboxPasswordResponses];
+
+export type UserRenameServiceData = {
+    body: {
+        /**
+         * Up to 40 characters
+         */
+        nickname: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/nickname';
+};
+
+export type UserRenameServiceErrors = {
+    /**
+     * Invalid body
+     */
+    400: unknown;
+    /**
+     * Missing token scope, or the service is shared with you through a team
+     */
+    403: unknown;
+    /**
+     * Service not found
+     */
+    404: unknown;
+};
+
+export type UserRenameServiceResponses = {
+    /**
+     * Nickname saved
+     */
+    200: {
+        nickname?: string | null;
+    };
+};
+
+export type UserRenameServiceResponse =
+    UserRenameServiceResponses[keyof UserRenameServiceResponses];
 
 export type VirtualServerPerformActionData = {
     /**
@@ -1431,6 +2276,72 @@ export type VirtualServerChangeDailyBackupStatusResponses = {
 export type VirtualServerChangeDailyBackupStatusResponse =
     VirtualServerChangeDailyBackupStatusResponses[keyof VirtualServerChangeDailyBackupStatusResponses];
 
+export type VirtualServerGetBootOrderData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/boot-order';
+};
+
+export type VirtualServerGetBootOrderErrors = {
+    /**
+     * Virtual Server not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerGetBootOrderResponses = {
+    /**
+     * Boot devices, first to last
+     */
+    200: Array<'virtio0' | 'ide0' | 'ide1' | 'ide2'>;
+};
+
+export type VirtualServerGetBootOrderResponse =
+    VirtualServerGetBootOrderResponses[keyof VirtualServerGetBootOrderResponses];
+
+export type VirtualServerUpdateBootOrderData = {
+    body: Array<'virtio0' | 'ide0' | 'ide1' | 'ide2'>;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/boot-order';
+};
+
+export type VirtualServerUpdateBootOrderErrors = {
+    /**
+     * Invalid body, or a device the server does not have
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Virtual Server not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerUpdateBootOrderResponses = {
+    /**
+     * Boot order saved
+     */
+    204: void;
+};
+
+export type VirtualServerUpdateBootOrderResponse =
+    VirtualServerUpdateBootOrderResponses[keyof VirtualServerUpdateBootOrderResponses];
+
 export type VirtualServerChangePasswordData = {
     /**
      * Change the password of a Virtual Server
@@ -1476,6 +2387,145 @@ export type VirtualServerChangePasswordResponses = {
 
 export type VirtualServerChangePasswordResponse =
     VirtualServerChangePasswordResponses[keyof VirtualServerChangePasswordResponses];
+
+export type VirtualServerUnmountIsoData = {
+    body: {
+        isoId: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/custom-iso';
+};
+
+export type VirtualServerUnmountIsoErrors = {
+    /**
+     * Invalid body
+     */
+    400: unknown;
+    /**
+     * Missing token scope or team permission
+     */
+    403: unknown;
+    /**
+     * Virtual Server or ISO not found
+     */
+    404: unknown;
+    /**
+     * Another custom ISO operation is in progress
+     */
+    409: unknown;
+};
+
+export type VirtualServerUnmountIsoResponses = {
+    /**
+     * ISO unmounted
+     */
+    204: void;
+};
+
+export type VirtualServerUnmountIsoResponse =
+    VirtualServerUnmountIsoResponses[keyof VirtualServerUnmountIsoResponses];
+
+export type VirtualServerGetMountedIsosData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/custom-iso';
+};
+
+export type VirtualServerGetMountedIsosErrors = {
+    /**
+     * Virtual Server not found
+     */
+    404: unknown;
+    /**
+     * Another custom ISO operation is in progress
+     */
+    409: unknown;
+};
+
+export type VirtualServerGetMountedIsosResponses = {
+    /**
+     * Mounted ISOs
+     */
+    200: {
+        mounts?: Array<{
+            device?: string;
+            iso?: {
+                createdAt?: string;
+                id?: string;
+                name?: string;
+                /**
+                 * Bytes
+                 */
+                size?: number;
+                status?: 'UPLOADING' | 'READY' | 'FAILED' | 'DELETING';
+                updatedAt?: string;
+            };
+            pendingRemoval?: boolean;
+        }>;
+    };
+};
+
+export type VirtualServerGetMountedIsosResponse =
+    VirtualServerGetMountedIsosResponses[keyof VirtualServerGetMountedIsosResponses];
+
+export type VirtualServerMountIsoData = {
+    body: {
+        bootFirst?: boolean;
+        isoId: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/custom-iso';
+};
+
+export type VirtualServerMountIsoErrors = {
+    /**
+     * Invalid body
+     */
+    400: unknown;
+    /**
+     * Missing token scope, or the service is shared with you through a team
+     */
+    403: unknown;
+    /**
+     * Virtual Server or ISO not found
+     */
+    404: unknown;
+    /**
+     * The ISO is not ready, no CD-ROM drive is free, or another custom ISO operation is in progress
+     */
+    409: unknown;
+};
+
+export type VirtualServerMountIsoResponses = {
+    /**
+     * ISO mounted
+     */
+    200: {
+        device?: string;
+        isoId?: string;
+    };
+};
+
+export type VirtualServerMountIsoResponse =
+    VirtualServerMountIsoResponses[keyof VirtualServerMountIsoResponses];
 
 export type VirtualServerGetGraphsData = {
     body?: never;
@@ -1583,6 +2633,10 @@ export type VirtualServerGetInformationResponses = {
          * Total disk space in bytes
          */
         disk?: number;
+        /**
+         * Indicates if there are pending changes for the VPS. If true, the VPS may require a restart to apply changes.
+         */
+        hasPendingChanges?: boolean;
         /**
          * Hostname of the VPS
          */
@@ -1723,6 +2777,178 @@ export type VirtualServerReinstallResponses = {
 export type VirtualServerReinstallResponse =
     VirtualServerReinstallResponses[keyof VirtualServerReinstallResponses];
 
+export type VirtualServerGetPowerSchedulesData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules';
+};
+
+export type VirtualServerGetPowerSchedulesErrors = {
+    /**
+     * VPS not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerGetPowerSchedulesResponses = {
+    /**
+     * Schedules and recent runs
+     */
+    200: unknown;
+};
+
+export type VirtualServerCreatePowerScheduleData = {
+    body: {
+        action: 'START' | 'SHUTDOWN' | 'REBOOT' | 'STOP';
+        cron?: string;
+        days?: Array<number>;
+        enabled?: boolean;
+        forceAfterMinutes?: 5 | 10 | 15 | 30;
+        intervalHours?: 1 | 2 | 3 | 4 | 6 | 8 | 12;
+        minute?: number;
+        mode: 'WEEKLY' | 'INTERVAL' | 'ONCE' | 'CRON';
+        /**
+         * Optional label, up to 60 characters
+         */
+        name?: string;
+        runAt?: string;
+        timezone: string;
+    };
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules';
+};
+
+export type VirtualServerCreatePowerScheduleErrors = {
+    /**
+     * Invalid rule, runs too close together or the limit of 10 schedules reached
+     */
+    400: unknown;
+    /**
+     * VPS not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerCreatePowerScheduleResponses = {
+    /**
+     * The created schedule
+     */
+    200: unknown;
+};
+
+export type VirtualServerDeletePowerScheduleData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Schedule ID
+         */
+        scheduleId: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules/{scheduleId}';
+};
+
+export type VirtualServerDeletePowerScheduleErrors = {
+    /**
+     * VPS or schedule not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerDeletePowerScheduleResponses = {
+    /**
+     * Deleted
+     */
+    204: void;
+};
+
+export type VirtualServerDeletePowerScheduleResponse =
+    VirtualServerDeletePowerScheduleResponses[keyof VirtualServerDeletePowerScheduleResponses];
+
+export type VirtualServerUpdatePowerScheduleData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Schedule ID
+         */
+        scheduleId: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules/{scheduleId}';
+};
+
+export type VirtualServerUpdatePowerScheduleErrors = {
+    /**
+     * Invalid rule
+     */
+    400: unknown;
+    /**
+     * VPS or schedule not found
+     */
+    404: unknown;
+};
+
+export type VirtualServerUpdatePowerScheduleResponses = {
+    /**
+     * The updated schedule
+     */
+    200: unknown;
+};
+
+export type VirtualServerRunPowerScheduleNowData = {
+    body?: never;
+    path: {
+        /**
+         * Service ID
+         */
+        id: string;
+        /**
+         * Schedule ID
+         */
+        scheduleId: string;
+    };
+    query?: never;
+    url: '/api/services/{id}/vps/schedules/{scheduleId}/run';
+};
+
+export type VirtualServerRunPowerScheduleNowErrors = {
+    /**
+     * VPS or schedule not found
+     */
+    404: unknown;
+    /**
+     * Too many manual runs
+     */
+    429: unknown;
+};
+
+export type VirtualServerRunPowerScheduleNowResponses = {
+    /**
+     * The run result: { status: SUCCESS | SKIPPED | FAILED, reason? }
+     */
+    200: unknown;
+};
+
 export type VirtualServerGetTasksData = {
     body?: never;
     path: {
@@ -1857,6 +3083,10 @@ export type BillingAddOrderData = {
          * Promo code
          */
         promoCode?: string | null;
+        /**
+         * A team you are an active member of to share the new service with. Teams set to share new services automatically get it either way.
+         */
+        teamId?: number | null;
     };
     path: {
         /**
@@ -1911,6 +3141,253 @@ export type BillingGetStoreGroupsResponses = {
 
 export type BillingGetStoreGroupsResponse =
     BillingGetStoreGroupsResponses[keyof BillingGetStoreGroupsResponses];
+
+export type TeamsListTeamsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/teams';
+};
+
+export type TeamsListTeamsResponses = {
+    /**
+     * Teams
+     */
+    200: Array<{
+        accessExpiresAt?: string | null;
+        autoShare?: boolean;
+        awaitingApproval?: boolean;
+        createdAt?: string;
+        id?: number;
+        memberCount?: number;
+        name?: string;
+        sharedServicesCount?: number;
+    }>;
+};
+
+export type TeamsListTeamsResponse = TeamsListTeamsResponses[keyof TeamsListTeamsResponses];
+
+export type TeamsGetTeamData = {
+    body?: never;
+    path: {
+        /**
+         * Team ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/teams/{id}';
+};
+
+export type TeamsGetTeamErrors = {
+    /**
+     * Team not found
+     */
+    404: unknown;
+};
+
+export type TeamsGetTeamResponses = {
+    /**
+     * Team
+     */
+    200: {
+        accessExpiresAt?: string | null;
+        autoShare?: boolean;
+        id?: number;
+        memberCount?: number;
+        name?: string;
+        pendingRequestCount?: number;
+        /**
+         * Team permission bitfield: 1 power, 2 console, 4 backups, 8 reinstall, 16 firewall, 32 panel login, 64 reinstall with approval, 128 backups with approval. Owners and admins have every permission.
+         */
+        permissions?: number;
+        role?: 'OWNER' | 'ADMIN' | 'MEMBER';
+        serviceCount?: number;
+    };
+};
+
+export type TeamsGetTeamResponse = TeamsGetTeamResponses[keyof TeamsGetTeamResponses];
+
+export type TeamsGetTeamLogsData = {
+    body?: never;
+    path: {
+        /**
+         * Team ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/teams/{id}/logs';
+};
+
+export type TeamsGetTeamLogsErrors = {
+    /**
+     * Team not found, or you are not an owner or admin
+     */
+    404: unknown;
+};
+
+export type TeamsGetTeamLogsResponses = {
+    /**
+     * Team logs
+     */
+    200: {
+        logs?: Array<{
+            action?: string;
+            clientId?: number;
+            createdAt?: string;
+            id?: number;
+            metadata?: {
+                [key: string]: unknown;
+            } | null;
+        }>;
+        members?: Array<{
+            clientId?: number;
+            fullName?: string;
+            memberId?: number | null;
+        }>;
+    };
+};
+
+export type TeamsGetTeamLogsResponse = TeamsGetTeamLogsResponses[keyof TeamsGetTeamLogsResponses];
+
+export type TeamsListTeamMembersData = {
+    body?: never;
+    path: {
+        /**
+         * Team ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/teams/{id}/members';
+};
+
+export type TeamsListTeamMembersErrors = {
+    /**
+     * Team not found
+     */
+    404: unknown;
+};
+
+export type TeamsListTeamMembersResponses = {
+    /**
+     * Members and invitations
+     */
+    200: Array<{
+        /**
+         * Access length an invitation grants
+         */
+        accessDays?: number | null;
+        accessExpiresAt?: number | null;
+        allServices?: boolean;
+        /**
+         * Only on your own row
+         */
+        autoShare?: boolean;
+        clientId?: number | null;
+        email?: string;
+        /**
+         * When a pending invitation expires
+         */
+        expiresAt?: number | null;
+        fullName?: string | null;
+        id?: number;
+        kind?: 'member' | 'invite';
+        /**
+         * Team permission bitfield: 1 power, 2 console, 4 backups, 8 reinstall, 16 firewall, 32 panel login, 64 reinstall with approval, 128 backups with approval. Owners and admins have every permission.
+         */
+        permissions?: number;
+        role?: 'OWNER' | 'ADMIN' | 'MEMBER';
+        serviceIds?: Array<number>;
+        /**
+         * Per-service permission overrides keyed by service ID
+         */
+        servicePermissions?: {
+            [key: string]: number;
+        };
+        status?: 'ACTIVE' | 'PENDING';
+    }>;
+};
+
+export type TeamsListTeamMembersResponse =
+    TeamsListTeamMembersResponses[keyof TeamsListTeamMembersResponses];
+
+export type TeamsListApprovalRequestsData = {
+    body?: never;
+    path: {
+        /**
+         * Team ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/teams/{id}/requests';
+};
+
+export type TeamsListApprovalRequestsErrors = {
+    /**
+     * Team not found, or you are not an owner or admin
+     */
+    404: unknown;
+};
+
+export type TeamsListApprovalRequestsResponses = {
+    /**
+     * Approval requests
+     */
+    200: Array<{
+        action?: 'REINSTALL' | 'RESTORE_BACKUP';
+        approvedUntil?: string | null;
+        createdAt?: string;
+        decidedAt?: string | null;
+        decidedBy?: string | null;
+        details?: {
+            [key: string]: unknown;
+        };
+        id?: number;
+        requestedBy?: string | null;
+        serviceId?: number;
+        state?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | 'USED' | 'EXPIRED';
+    }>;
+};
+
+export type TeamsListApprovalRequestsResponse =
+    TeamsListApprovalRequestsResponses[keyof TeamsListApprovalRequestsResponses];
+
+export type TeamsListTeamServicesData = {
+    body?: never;
+    path: {
+        /**
+         * Team ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/teams/{id}/services';
+};
+
+export type TeamsListTeamServicesErrors = {
+    /**
+     * Team not found
+     */
+    404: unknown;
+};
+
+export type TeamsListTeamServicesResponses = {
+    /**
+     * Shared services
+     */
+    200: Array<{
+        mine?: boolean;
+        serviceId?: number;
+        sharedAt?: string;
+        sharedBy?: string | null;
+    }>;
+};
+
+export type TeamsListTeamServicesResponse =
+    TeamsListTeamServicesResponses[keyof TeamsListTeamServicesResponses];
 
 export type UserGetCurrentUserData = {
     body?: never;
@@ -2025,6 +3502,63 @@ export type UserGetCurrentUserResponses = {
 
 export type UserGetCurrentUserResponse =
     UserGetCurrentUserResponses[keyof UserGetCurrentUserResponses];
+
+export type BillingGetAutoPayStatusesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/users/@me/autopay-statuses';
+};
+
+export type BillingGetAutoPayStatusesResponses = {
+    /**
+     * Auto-Pay status per service
+     */
+    200: {
+        [key: string]: boolean;
+    };
+};
+
+export type BillingGetAutoPayStatusesResponse =
+    BillingGetAutoPayStatusesResponses[keyof BillingGetAutoPayStatusesResponses];
+
+export type VirtualServerGetCustomIsoLibraryData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/users/@me/custom-isos';
+};
+
+export type VirtualServerGetCustomIsoLibraryResponses = {
+    /**
+     * Custom ISO library
+     */
+    200: {
+        isos?: Array<{
+            createdAt?: string;
+            id?: string;
+            mounts?: Array<{
+                device?: string;
+                serviceId?: number;
+            }>;
+            name?: string;
+            /**
+             * Bytes
+             */
+            size?: number;
+            status?: 'UPLOADING' | 'READY' | 'FAILED' | 'DELETING';
+            updatedAt?: string;
+        }>;
+        quota?: {
+            available?: number;
+            limit?: number;
+            used?: number;
+        };
+    };
+};
+
+export type VirtualServerGetCustomIsoLibraryResponse =
+    VirtualServerGetCustomIsoLibraryResponses[keyof VirtualServerGetCustomIsoLibraryResponses];
 
 export type UserGetInvoicesData = {
     body?: never;
@@ -2236,6 +3770,62 @@ export type BillingMakePaymentResponses = {
 
 export type BillingMakePaymentResponse =
     BillingMakePaymentResponses[keyof BillingMakePaymentResponses];
+
+export type BillingBulkPayWithBalanceData = {
+    body?: {
+        expectedTotal: number;
+        invoiceIds: Array<number>;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/users/@me/invoices/bulk/balance';
+};
+
+export type BillingBulkPayWithBalanceResponses = {
+    /**
+     * Result per invoice
+     */
+    200: {
+        results?: Array<{
+            amount?: number;
+            invoiceId?: number;
+            status?: 'paid' | 'failed';
+        }>;
+    };
+};
+
+export type BillingBulkPayWithBalanceResponse =
+    BillingBulkPayWithBalanceResponses[keyof BillingBulkPayWithBalanceResponses];
+
+export type BillingPreviewBulkPaymentData = {
+    body?: {
+        invoiceIds: Array<number>;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/users/@me/invoices/bulk/preview';
+};
+
+export type BillingPreviewBulkPaymentResponses = {
+    /**
+     * Payable invoices with the amount still due, invoices that cannot be paid, and the balance
+     */
+    200: {
+        balance?: number;
+        invoices?: Array<{
+            amount?: number;
+            dueDate?: string;
+            id?: number;
+            isAddFunds?: boolean;
+            total?: number;
+        }>;
+        total?: number;
+        unavailable?: Array<number>;
+    };
+};
+
+export type BillingPreviewBulkPaymentResponse =
+    BillingPreviewBulkPaymentResponses[keyof BillingPreviewBulkPaymentResponses];
 
 export type UserGetReferralCodeData = {
     body?: never;
