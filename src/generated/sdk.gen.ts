@@ -8,6 +8,12 @@ import type {
     UserGetHelpRequestResponses,
     UserGetServicesData,
     UserGetServicesResponses,
+    BillingGetAutoPaySettingsData,
+    BillingGetAutoPaySettingsResponses,
+    BillingGetAutoPaySettingsErrors,
+    BillingUpdateAutoPaySettingsData,
+    BillingUpdateAutoPaySettingsResponses,
+    BillingUpdateAutoPaySettingsErrors,
     DedicatedServerPerformActionData,
     DedicatedServerPerformActionResponses,
     DedicatedServerPerformActionErrors,
@@ -38,6 +44,9 @@ import type {
     FirewallUpdateAttackNotificationSettingsData,
     FirewallUpdateAttackNotificationSettingsResponses,
     FirewallUpdateAttackNotificationSettingsErrors,
+    FirewallGetLiveTrafficData,
+    FirewallGetLiveTrafficResponses,
+    FirewallGetLiveTrafficErrors,
     FirewallResetReverseDnsData,
     FirewallResetReverseDnsResponses,
     FirewallResetReverseDnsErrors,
@@ -56,9 +65,51 @@ import type {
     FirewallGetStatisticsData,
     FirewallGetStatisticsResponses,
     FirewallGetStatisticsErrors,
+    MailHostingListAliasesData,
+    MailHostingListAliasesResponses,
+    MailHostingListAliasesErrors,
+    MailHostingCreateAliasData,
+    MailHostingCreateAliasResponses,
+    MailHostingCreateAliasErrors,
+    MailHostingDeleteAliasData,
+    MailHostingDeleteAliasResponses,
+    MailHostingDeleteAliasErrors,
+    MailHostingUpdateAliasData,
+    MailHostingUpdateAliasResponses,
+    MailHostingUpdateAliasErrors,
+    MailHostingListDomainAliasesData,
+    MailHostingListDomainAliasesResponses,
+    MailHostingListDomainAliasesErrors,
+    MailHostingAddDomainAliasData,
+    MailHostingAddDomainAliasResponses,
+    MailHostingAddDomainAliasErrors,
+    MailHostingRemoveDomainAliasData,
+    MailHostingRemoveDomainAliasResponses,
+    MailHostingRemoveDomainAliasErrors,
     MailHostingGetInformationData,
     MailHostingGetInformationResponses,
     MailHostingGetInformationErrors,
+    MailHostingRefreshUsageStatisticsData,
+    MailHostingRefreshUsageStatisticsResponses,
+    MailHostingRefreshUsageStatisticsErrors,
+    MailHostingListMailboxesData,
+    MailHostingListMailboxesResponses,
+    MailHostingListMailboxesErrors,
+    MailHostingCreateMailboxData,
+    MailHostingCreateMailboxResponses,
+    MailHostingCreateMailboxErrors,
+    MailHostingDeleteMailboxData,
+    MailHostingDeleteMailboxResponses,
+    MailHostingDeleteMailboxErrors,
+    MailHostingUpdateMailboxData,
+    MailHostingUpdateMailboxResponses,
+    MailHostingUpdateMailboxErrors,
+    MailHostingChangeMailboxPasswordData,
+    MailHostingChangeMailboxPasswordResponses,
+    MailHostingChangeMailboxPasswordErrors,
+    UserRenameServiceData,
+    UserRenameServiceResponses,
+    UserRenameServiceErrors,
     VirtualServerPerformActionData,
     VirtualServerPerformActionResponses,
     VirtualServerPerformActionErrors,
@@ -74,9 +125,24 @@ import type {
     VirtualServerChangeDailyBackupStatusData,
     VirtualServerChangeDailyBackupStatusResponses,
     VirtualServerChangeDailyBackupStatusErrors,
+    VirtualServerGetBootOrderData,
+    VirtualServerGetBootOrderResponses,
+    VirtualServerGetBootOrderErrors,
+    VirtualServerUpdateBootOrderData,
+    VirtualServerUpdateBootOrderResponses,
+    VirtualServerUpdateBootOrderErrors,
     VirtualServerChangePasswordData,
     VirtualServerChangePasswordResponses,
     VirtualServerChangePasswordErrors,
+    VirtualServerUnmountIsoData,
+    VirtualServerUnmountIsoResponses,
+    VirtualServerUnmountIsoErrors,
+    VirtualServerGetMountedIsosData,
+    VirtualServerGetMountedIsosResponses,
+    VirtualServerGetMountedIsosErrors,
+    VirtualServerMountIsoData,
+    VirtualServerMountIsoResponses,
+    VirtualServerMountIsoErrors,
     VirtualServerGetGraphsData,
     VirtualServerGetGraphsResponses,
     VirtualServerGetGraphsErrors,
@@ -89,6 +155,21 @@ import type {
     VirtualServerReinstallData,
     VirtualServerReinstallResponses,
     VirtualServerReinstallErrors,
+    VirtualServerGetPowerSchedulesData,
+    VirtualServerGetPowerSchedulesResponses,
+    VirtualServerGetPowerSchedulesErrors,
+    VirtualServerCreatePowerScheduleData,
+    VirtualServerCreatePowerScheduleResponses,
+    VirtualServerCreatePowerScheduleErrors,
+    VirtualServerDeletePowerScheduleData,
+    VirtualServerDeletePowerScheduleResponses,
+    VirtualServerDeletePowerScheduleErrors,
+    VirtualServerUpdatePowerScheduleData,
+    VirtualServerUpdatePowerScheduleResponses,
+    VirtualServerUpdatePowerScheduleErrors,
+    VirtualServerRunPowerScheduleNowData,
+    VirtualServerRunPowerScheduleNowResponses,
+    VirtualServerRunPowerScheduleNowErrors,
     VirtualServerGetTasksData,
     VirtualServerGetTasksResponses,
     VirtualServerGetTasksErrors,
@@ -98,8 +179,29 @@ import type {
     BillingAddOrderResponses,
     BillingGetStoreGroupsData,
     BillingGetStoreGroupsResponses,
+    TeamsListTeamsData,
+    TeamsListTeamsResponses,
+    TeamsGetTeamData,
+    TeamsGetTeamResponses,
+    TeamsGetTeamErrors,
+    TeamsGetTeamLogsData,
+    TeamsGetTeamLogsResponses,
+    TeamsGetTeamLogsErrors,
+    TeamsListTeamMembersData,
+    TeamsListTeamMembersResponses,
+    TeamsListTeamMembersErrors,
+    TeamsListApprovalRequestsData,
+    TeamsListApprovalRequestsResponses,
+    TeamsListApprovalRequestsErrors,
+    TeamsListTeamServicesData,
+    TeamsListTeamServicesResponses,
+    TeamsListTeamServicesErrors,
     UserGetCurrentUserData,
     UserGetCurrentUserResponses,
+    BillingGetAutoPayStatusesData,
+    BillingGetAutoPayStatusesResponses,
+    VirtualServerGetCustomIsoLibraryData,
+    VirtualServerGetCustomIsoLibraryResponses,
     UserGetInvoicesData,
     UserGetInvoicesResponses,
     UserGetInvoiceData,
@@ -107,6 +209,10 @@ import type {
     BillingMakePaymentData,
     BillingMakePaymentResponses,
     BillingMakePaymentErrors,
+    BillingBulkPayWithBalanceData,
+    BillingBulkPayWithBalanceResponses,
+    BillingPreviewBulkPaymentData,
+    BillingPreviewBulkPaymentResponses,
     UserGetReferralCodeData,
     UserGetReferralCodeResponses,
     UserGetSessionsData,
@@ -198,6 +304,58 @@ export const userGetServices = <ThrowOnError extends boolean = false>(
         url: '/api/services',
         ...options,
         responseStyle: 'fields',
+    });
+};
+
+/**
+ * Get Auto-Pay Settings
+ * Get the automatic payment settings of an active service and the payment attempts made for it.
+ */
+export const billingGetAutoPaySettings = <ThrowOnError extends boolean = false>(
+    options: Options<BillingGetAutoPaySettingsData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        BillingGetAutoPaySettingsResponses,
+        BillingGetAutoPaySettingsErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/autopay',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Update Auto-Pay Settings
+ * Turn automatic payment on or off for an active service. daysBeforeDue is how many days before the due date the invoice is paid. CARD and FIRST_AVAILABLE need a saved card; FIRST_AVAILABLE tries the account balance first, then the cards.
+ */
+export const billingUpdateAutoPaySettings = <ThrowOnError extends boolean = false>(
+    options: Options<BillingUpdateAutoPaySettingsData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).put<
+        BillingUpdateAutoPaySettingsResponses,
+        BillingUpdateAutoPaySettingsErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/autopay',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 };
 
@@ -454,6 +612,30 @@ export const firewallUpdateAttackNotificationSettings = <ThrowOnError extends bo
 };
 
 /**
+ * Get Live Traffic
+ * Get the current allowed and blocked traffic for an IP address protected by the advanced firewall on a Virtual or Dedicated Server
+ */
+export const firewallGetLiveTraffic = <ThrowOnError extends boolean = false>(
+    options: Options<FirewallGetLiveTrafficData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        FirewallGetLiveTrafficResponses,
+        FirewallGetLiveTrafficErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/firewall/{ip}/metrics',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
  * Reset Reverse DNS
  * Reset reverse DNS (rDNS) for a specific IP address on a Virtual or Dedicated Server
  */
@@ -579,7 +761,7 @@ export const firewallDeleteRule = <ThrowOnError extends boolean = false>(
 
 /**
  * Get Statistics
- * Get nShield statistics for a specific IP address on a Virtual or Dedicated Server
+ * Get the firewall traffic history for a specific IP address on a Virtual or Dedicated Server
  */
 export const firewallGetStatistics = <ThrowOnError extends boolean = false>(
     options: Options<FirewallGetStatisticsData, ThrowOnError>,
@@ -596,6 +778,186 @@ export const firewallGetStatistics = <ThrowOnError extends boolean = false>(
             },
         ],
         url: '/api/services/{id}/firewall/{ip}/stats',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * List Aliases
+ * List the aliases (forwarding addresses) of a mail hosting service.
+ */
+export const mailHostingListAliases = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingListAliasesData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        MailHostingListAliasesResponses,
+        MailHostingListAliasesErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/aliases',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Create Alias
+ * Create an alias (forwarding address) on a mail hosting service. targets may be empty only when features.allUsers is true.
+ */
+export const mailHostingCreateAlias = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingCreateAliasData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        MailHostingCreateAliasResponses,
+        MailHostingCreateAliasErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/aliases',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Delete Alias
+ * Delete an alias of a mail hosting service.
+ */
+export const mailHostingDeleteAlias = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingDeleteAliasData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).delete<
+        MailHostingDeleteAliasResponses,
+        MailHostingDeleteAliasErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/aliases/{alias}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Update Alias
+ * Rename an alias or change its display name, targets or features. Send only the fields to change; targets replaces the whole list.
+ */
+export const mailHostingUpdateAlias = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingUpdateAliasData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).put<
+        MailHostingUpdateAliasResponses,
+        MailHostingUpdateAliasErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/aliases/{alias}',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * List Domain Aliases
+ * List the domains that receive mail for the mailboxes of a mail hosting service.
+ */
+export const mailHostingListDomainAliases = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingListDomainAliasesData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        MailHostingListDomainAliasesResponses,
+        MailHostingListDomainAliasesErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/domain-aliases',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Add Domain Alias
+ * Add a domain whose mail is delivered to the mailboxes with the same name: info@example.net reaches info@ the service domain. Give the added domain the same MX records as the service domain.
+ */
+export const mailHostingAddDomainAlias = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingAddDomainAliasData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        MailHostingAddDomainAliasResponses,
+        MailHostingAddDomainAliasErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/domain-aliases',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Remove Domain Alias
+ * Stop receiving mail for a domain alias.
+ */
+export const mailHostingRemoveDomainAlias = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingRemoveDomainAliasData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).delete<
+        MailHostingRemoveDomainAliasResponses,
+        MailHostingRemoveDomainAliasErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/domain-aliases/{alias}',
         ...options,
         responseStyle: 'fields',
     });
@@ -622,6 +984,190 @@ export const mailHostingGetInformation = <ThrowOnError extends boolean = false>(
         url: '/api/services/{id}/mail/info',
         ...options,
         responseStyle: 'fields',
+    });
+};
+
+/**
+ * Refresh Usage Statistics
+ * Ask the mail server to recount the disk usage and mailbox totals of a mail hosting service.
+ */
+export const mailHostingRefreshUsageStatistics = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingRefreshUsageStatisticsData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        MailHostingRefreshUsageStatisticsResponses,
+        MailHostingRefreshUsageStatisticsErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/refresh',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * List Mailboxes
+ * List the mailboxes of a mail hosting service. diskLimit is the mailbox quota in MB (0 shares the domain quota); diskUsage is in MB and null for a mailbox without its own quota.
+ */
+export const mailHostingListMailboxes = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingListMailboxesData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        MailHostingListMailboxesResponses,
+        MailHostingListMailboxesErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/users',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Create Mailbox
+ * Create a mailbox on a mail hosting service. diskLimit is the mailbox quota in MB; 0 shares the domain quota.
+ */
+export const mailHostingCreateMailbox = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingCreateMailboxData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        MailHostingCreateMailboxResponses,
+        MailHostingCreateMailboxErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/users',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Delete Mailbox
+ * Delete a mailbox and its mail. The primary administrator mailbox cannot be deleted.
+ */
+export const mailHostingDeleteMailbox = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingDeleteMailboxData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).delete<
+        MailHostingDeleteMailboxResponses,
+        MailHostingDeleteMailboxErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/users/{username}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Update Mailbox
+ * Change the display name, quota (MB, 0 shares the domain quota) or status of a mailbox. Send only the fields to change. The primary administrator mailbox cannot be disabled.
+ */
+export const mailHostingUpdateMailbox = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingUpdateMailboxData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).put<
+        MailHostingUpdateMailboxResponses,
+        MailHostingUpdateMailboxErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/users/{username}',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Change Mailbox Password
+ * Set a new password for a mailbox. The primary administrator's password is the service password and cannot be changed here.
+ */
+export const mailHostingChangeMailboxPassword = <ThrowOnError extends boolean = false>(
+    options: Options<MailHostingChangeMailboxPasswordData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        MailHostingChangeMailboxPasswordResponses,
+        MailHostingChangeMailboxPasswordErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/mail/users/{username}/password',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Rename Service
+ * Set the nickname shown for a service in the dashboard. An empty nickname removes it. Only the owner of the service can rename it.
+ */
+export const userRenameService = <ThrowOnError extends boolean = false>(
+    options: Options<UserRenameServiceData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).put<
+        UserRenameServiceResponses,
+        UserRenameServiceErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/nickname',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 };
 
@@ -754,6 +1300,58 @@ export const virtualServerChangeDailyBackupStatus = <ThrowOnError extends boolea
 };
 
 /**
+ * Get Boot Order
+ * Get the boot order of a Virtual Server. virtio0 is the disk; ide0 to ide2 are CD-ROM drives with an ISO in them.
+ */
+export const virtualServerGetBootOrder = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerGetBootOrderData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        VirtualServerGetBootOrderResponses,
+        VirtualServerGetBootOrderErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/boot-order',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Update Boot Order
+ * Set the boot order of a Virtual Server. Send the devices first to last; each must exist on the server. Changes apply once the server is shut down and started again; a reboot does not apply them.
+ */
+export const virtualServerUpdateBootOrder = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerUpdateBootOrderData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).put<
+        VirtualServerUpdateBootOrderResponses,
+        VirtualServerUpdateBootOrderErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/boot-order',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
  * Change Password
  * Change the password of a Virtual Server
  */
@@ -772,6 +1370,86 @@ export const virtualServerChangePassword = <ThrowOnError extends boolean = false
             },
         ],
         url: '/api/services/{id}/vps/change-password',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Unmount ISO
+ * Remove a custom ISO from a Virtual Server. Changes apply once the server is shut down and started again; a reboot does not apply them.
+ */
+export const virtualServerUnmountIso = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerUnmountIsoData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).delete<
+        VirtualServerUnmountIsoResponses,
+        VirtualServerUnmountIsoErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/custom-iso',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Get Mounted ISOs
+ * List the custom ISOs mounted on a Virtual Server. pendingRemoval is true for an ISO that leaves once the server is shut down and started again. iso is null for an ISO that is not in your library.
+ */
+export const virtualServerGetMountedIsos = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerGetMountedIsosData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        VirtualServerGetMountedIsosResponses,
+        VirtualServerGetMountedIsosErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/custom-iso',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Mount ISO
+ * Mount a READY ISO from your custom ISO library on a free CD-ROM drive of a Virtual Server. bootFirst puts that drive first in the boot order. Changes apply once the server is shut down and started again; a reboot does not apply them. Only the owner of the service can mount an ISO.
+ */
+export const virtualServerMountIso = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerMountIsoData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).put<
+        VirtualServerMountIsoResponses,
+        VirtualServerMountIsoErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/custom-iso',
         ...options,
         responseStyle: 'fields',
         headers: {
@@ -882,6 +1560,130 @@ export const virtualServerReinstall = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Get Power Schedules
+ * List the scheduled power actions of a Virtual Server and its last 20 runs
+ */
+export const virtualServerGetPowerSchedules = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerGetPowerSchedulesData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        VirtualServerGetPowerSchedulesResponses,
+        VirtualServerGetPowerSchedulesErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Create Power Schedule
+ * Schedule a power action (START, SHUTDOWN, REBOOT or STOP) on a Virtual Server. mode WEEKLY takes days (1 = Monday) and minute after midnight, INTERVAL takes intervalHours and minute past the hour, ONCE takes runAt, CRON takes a five-field cron expression. Power actions on one server, across all its enabled schedules, must be at least 15 minutes apart.
+ */
+export const virtualServerCreatePowerSchedule = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerCreatePowerScheduleData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        VirtualServerCreatePowerScheduleResponses,
+        VirtualServerCreatePowerScheduleErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+};
+
+/**
+ * Delete Power Schedule
+ * Delete a power schedule; its past runs stay in the history
+ */
+export const virtualServerDeletePowerSchedule = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerDeletePowerScheduleData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).delete<
+        VirtualServerDeletePowerScheduleResponses,
+        VirtualServerDeletePowerScheduleErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules/{scheduleId}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Update Power Schedule
+ * Replace a power schedule with a new rule (same body as creating one) or send only { enabled }
+ */
+export const virtualServerUpdatePowerSchedule = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerUpdatePowerScheduleData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).patch<
+        VirtualServerUpdatePowerScheduleResponses,
+        VirtualServerUpdatePowerScheduleErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules/{scheduleId}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Run Power Schedule Now
+ * Run a power schedule once right away. Skipped when the server is already in the target state or busy. At most 3 runs per minute per service.
+ */
+export const virtualServerRunPowerScheduleNow = <ThrowOnError extends boolean = false>(
+    options: Options<VirtualServerRunPowerScheduleNowData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).post<
+        VirtualServerRunPowerScheduleNowResponses,
+        VirtualServerRunPowerScheduleNowErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/services/{id}/vps/schedules/{scheduleId}/run',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
  * Get Tasks
  * Get VPS tasks
  */
@@ -972,6 +1774,146 @@ export const billingGetStoreGroups = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * List Teams
+ * List the teams you belong to and the teams that invited you. Invitations waiting for your answer come first and carry awaitingApproval: true without membership details.
+ */
+export const teamsListTeams = <ThrowOnError extends boolean = false>(
+    options?: Options<TeamsListTeamsData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).get<TeamsListTeamsResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/teams',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Get Team
+ * Get a team you are an active member of, with your role and permissions. pendingRequestCount counts open approval requests and is 0 for members.
+ */
+export const teamsGetTeam = <ThrowOnError extends boolean = false>(
+    options: Options<TeamsGetTeamData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        TeamsGetTeamResponses,
+        TeamsGetTeamErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/teams/{id}',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Get Team Logs
+ * Get the activity log of a team, newest first, with the names of the people it mentions. Only owners and admins can read it.
+ */
+export const teamsGetTeamLogs = <ThrowOnError extends boolean = false>(
+    options: Options<TeamsGetTeamLogsData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        TeamsGetTeamLogsResponses,
+        TeamsGetTeamLogsErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/teams/{id}/logs',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * List Team Members
+ * List the members of a team. Owners and admins also see pending members and open invitations (kind: invite). Times are Unix timestamps in milliseconds.
+ */
+export const teamsListTeamMembers = <ThrowOnError extends boolean = false>(
+    options: Options<TeamsListTeamMembersData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        TeamsListTeamMembersResponses,
+        TeamsListTeamMembersErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/teams/{id}/members',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * List Approval Requests
+ * List the reinstall and backup restore requests of a team: open ones first, then the decisions of the last 30 days (at most 100). Only owners and admins can read them.
+ */
+export const teamsListApprovalRequests = <ThrowOnError extends boolean = false>(
+    options: Options<TeamsListApprovalRequestsData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        TeamsListApprovalRequestsResponses,
+        TeamsListApprovalRequestsErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/teams/{id}/requests',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * List Team Services
+ * List the services shared with a team that you can see. mine is true for services you shared.
+ */
+export const teamsListTeamServices = <ThrowOnError extends boolean = false>(
+    options: Options<TeamsListTeamServicesData, ThrowOnError>,
+) => {
+    return (options.client ?? _heyApiClient).get<
+        TeamsListTeamServicesResponses,
+        TeamsListTeamServicesErrors,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/teams/{id}/services',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
  * Get Current User
  * Get the current user information
  */
@@ -990,6 +1932,54 @@ export const userGetCurrentUser = <ThrowOnError extends boolean = false>(
             },
         ],
         url: '/api/users/@me',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Get Auto-Pay Statuses
+ * Whether automatic payment is on for each active service, keyed by service ID.
+ */
+export const billingGetAutoPayStatuses = <ThrowOnError extends boolean = false>(
+    options?: Options<BillingGetAutoPayStatusesData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).get<
+        BillingGetAutoPayStatusesResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/users/@me/autopay-statuses',
+        ...options,
+        responseStyle: 'fields',
+    });
+};
+
+/**
+ * Get Custom ISO Library
+ * List the ISOs uploaded to your custom ISO library, the Virtual Servers each one is mounted on, and the storage quota in bytes. Upload ISOs from the dashboard.
+ */
+export const virtualServerGetCustomIsoLibrary = <ThrowOnError extends boolean = false>(
+    options?: Options<VirtualServerGetCustomIsoLibraryData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).get<
+        VirtualServerGetCustomIsoLibraryResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/users/@me/custom-isos',
         ...options,
         responseStyle: 'fields',
     });
@@ -1059,6 +2049,62 @@ export const billingMakePayment = <ThrowOnError extends boolean = false>(
         headers: {
             'Content-Type': 'application/json',
             ...options.headers,
+        },
+    });
+};
+
+/**
+ * Bulk Pay With Balance
+ * Pay several invoices from the account balance. expectedTotal must equal the total returned by the preview.
+ */
+export const billingBulkPayWithBalance = <ThrowOnError extends boolean = false>(
+    options?: Options<BillingBulkPayWithBalanceData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).post<
+        BillingBulkPayWithBalanceResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/users/@me/invoices/bulk/balance',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+        },
+    });
+};
+
+/**
+ * Preview Bulk Payment
+ * Get what is still due on several invoices before paying them together
+ */
+export const billingPreviewBulkPayment = <ThrowOnError extends boolean = false>(
+    options?: Options<BillingPreviewBulkPaymentData, ThrowOnError>,
+) => {
+    return (options?.client ?? _heyApiClient).post<
+        BillingPreviewBulkPaymentResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [
+            {
+                name: 'Authorization',
+                type: 'apiKey',
+            },
+        ],
+        url: '/api/users/@me/invoices/bulk/preview',
+        ...options,
+        responseStyle: 'fields',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
         },
     });
 };

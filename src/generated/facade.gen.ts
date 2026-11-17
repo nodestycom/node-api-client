@@ -6,6 +6,8 @@ import {
     userGetHelpRequests,
     userGetHelpRequest,
     userGetServices,
+    billingGetAutoPaySettings,
+    billingUpdateAutoPaySettings,
     dedicatedServerPerformAction,
     dedicatedServerGetHardwareComponents,
     dedicatedServerGetInformation,
@@ -16,31 +18,66 @@ import {
     firewallGetAttackLogs,
     firewallGetAttackNotificationSettings,
     firewallUpdateAttackNotificationSettings,
+    firewallGetLiveTraffic,
     firewallResetReverseDns,
     firewallGetReverseDns,
     firewallUpsertReverseDns,
     firewallGetRules,
     firewallDeleteRule,
     firewallGetStatistics,
+    mailHostingListAliases,
+    mailHostingCreateAlias,
+    mailHostingDeleteAlias,
+    mailHostingUpdateAlias,
+    mailHostingListDomainAliases,
+    mailHostingAddDomainAlias,
+    mailHostingRemoveDomainAlias,
     mailHostingGetInformation,
+    mailHostingRefreshUsageStatistics,
+    mailHostingListMailboxes,
+    mailHostingCreateMailbox,
+    mailHostingDeleteMailbox,
+    mailHostingUpdateMailbox,
+    mailHostingChangeMailboxPassword,
+    userRenameService,
     virtualServerPerformAction,
     virtualServerGetBackups,
     virtualServerCreateBackup,
     virtualServerRestoreBackup,
     virtualServerChangeDailyBackupStatus,
+    virtualServerGetBootOrder,
+    virtualServerUpdateBootOrder,
     virtualServerChangePassword,
+    virtualServerUnmountIso,
+    virtualServerGetMountedIsos,
+    virtualServerMountIso,
     virtualServerGetGraphs,
     virtualServerGetInformation,
     virtualServerGetOsTemplates,
     virtualServerReinstall,
+    virtualServerGetPowerSchedules,
+    virtualServerCreatePowerSchedule,
+    virtualServerDeletePowerSchedule,
+    virtualServerUpdatePowerSchedule,
+    virtualServerRunPowerScheduleNow,
     virtualServerGetTasks,
     billingGetProductsByGroupId,
     billingAddOrder,
     billingGetStoreGroups,
+    teamsListTeams,
+    teamsGetTeam,
+    teamsGetTeamLogs,
+    teamsListTeamMembers,
+    teamsListApprovalRequests,
+    teamsListTeamServices,
     userGetCurrentUser,
+    billingGetAutoPayStatuses,
+    virtualServerGetCustomIsoLibrary,
     userGetInvoices,
     userGetInvoice,
     billingMakePayment,
+    billingBulkPayWithBalance,
+    billingPreviewBulkPayment,
     userGetReferralCode,
     userGetSessions,
     billingGetPaymentMethods,
@@ -49,6 +86,8 @@ import type {
     UserGetHelpRequestsData,
     UserGetHelpRequestData,
     UserGetServicesData,
+    BillingGetAutoPaySettingsData,
+    BillingUpdateAutoPaySettingsData,
     DedicatedServerPerformActionData,
     DedicatedServerGetHardwareComponentsData,
     DedicatedServerGetInformationData,
@@ -59,31 +98,66 @@ import type {
     FirewallGetAttackLogsData,
     FirewallGetAttackNotificationSettingsData,
     FirewallUpdateAttackNotificationSettingsData,
+    FirewallGetLiveTrafficData,
     FirewallResetReverseDnsData,
     FirewallGetReverseDnsData,
     FirewallUpsertReverseDnsData,
     FirewallGetRulesData,
     FirewallDeleteRuleData,
     FirewallGetStatisticsData,
+    MailHostingListAliasesData,
+    MailHostingCreateAliasData,
+    MailHostingDeleteAliasData,
+    MailHostingUpdateAliasData,
+    MailHostingListDomainAliasesData,
+    MailHostingAddDomainAliasData,
+    MailHostingRemoveDomainAliasData,
     MailHostingGetInformationData,
+    MailHostingRefreshUsageStatisticsData,
+    MailHostingListMailboxesData,
+    MailHostingCreateMailboxData,
+    MailHostingDeleteMailboxData,
+    MailHostingUpdateMailboxData,
+    MailHostingChangeMailboxPasswordData,
+    UserRenameServiceData,
     VirtualServerPerformActionData,
     VirtualServerGetBackupsData,
     VirtualServerCreateBackupData,
     VirtualServerRestoreBackupData,
     VirtualServerChangeDailyBackupStatusData,
+    VirtualServerGetBootOrderData,
+    VirtualServerUpdateBootOrderData,
     VirtualServerChangePasswordData,
+    VirtualServerUnmountIsoData,
+    VirtualServerGetMountedIsosData,
+    VirtualServerMountIsoData,
     VirtualServerGetGraphsData,
     VirtualServerGetInformationData,
     VirtualServerGetOsTemplatesData,
     VirtualServerReinstallData,
+    VirtualServerGetPowerSchedulesData,
+    VirtualServerCreatePowerScheduleData,
+    VirtualServerDeletePowerScheduleData,
+    VirtualServerUpdatePowerScheduleData,
+    VirtualServerRunPowerScheduleNowData,
     VirtualServerGetTasksData,
     BillingGetProductsByGroupIdData,
     BillingAddOrderData,
     BillingGetStoreGroupsData,
+    TeamsListTeamsData,
+    TeamsGetTeamData,
+    TeamsGetTeamLogsData,
+    TeamsListTeamMembersData,
+    TeamsListApprovalRequestsData,
+    TeamsListTeamServicesData,
     UserGetCurrentUserData,
+    BillingGetAutoPayStatusesData,
+    VirtualServerGetCustomIsoLibraryData,
     UserGetInvoicesData,
     UserGetInvoiceData,
     BillingMakePaymentData,
+    BillingBulkPayWithBalanceData,
+    BillingPreviewBulkPaymentData,
     UserGetReferralCodeData,
     UserGetSessionsData,
     BillingGetPaymentMethodsData,
@@ -124,6 +198,19 @@ export class UserClient {
         return userGetServices<ThrowOnError>({
             ...options,
             client: this.client,
+        });
+    }
+
+    public renameService<ThrowOnError extends boolean = false>(
+        id: UserRenameServiceData['path']['id'],
+        data: NonNullable<UserRenameServiceData['body']>,
+        options?: FacadeOptions<UserRenameServiceData, ThrowOnError>,
+    ): ReturnType<typeof userRenameService<ThrowOnError>> {
+        return userRenameService<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
         });
     }
 
@@ -169,6 +256,121 @@ export class UserClient {
         options?: FacadeOptions<UserGetSessionsData, ThrowOnError>,
     ): ReturnType<typeof userGetSessions<ThrowOnError>> {
         return userGetSessions<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
+    }
+}
+
+export class BillingClient {
+    public constructor(private readonly client: NodestyClient) {}
+
+    public getAutoPaySettings<ThrowOnError extends boolean = false>(
+        id: BillingGetAutoPaySettingsData['path']['id'],
+        options?: FacadeOptions<BillingGetAutoPaySettingsData, ThrowOnError>,
+    ): ReturnType<typeof billingGetAutoPaySettings<ThrowOnError>> {
+        return billingGetAutoPaySettings<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public updateAutoPaySettings<ThrowOnError extends boolean = false>(
+        id: BillingUpdateAutoPaySettingsData['path']['id'],
+        data: NonNullable<BillingUpdateAutoPaySettingsData['body']>,
+        options?: FacadeOptions<BillingUpdateAutoPaySettingsData, ThrowOnError>,
+    ): ReturnType<typeof billingUpdateAutoPaySettings<ThrowOnError>> {
+        return billingUpdateAutoPaySettings<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public getProductsByGroupId<ThrowOnError extends boolean = false>(
+        groupId: BillingGetProductsByGroupIdData['path']['groupId'],
+        options?: FacadeOptions<BillingGetProductsByGroupIdData, ThrowOnError>,
+    ): ReturnType<typeof billingGetProductsByGroupId<ThrowOnError>> {
+        return billingGetProductsByGroupId<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { groupId },
+        });
+    }
+
+    public addOrder<ThrowOnError extends boolean = false>(
+        groupId: BillingAddOrderData['path']['groupId'],
+        productId: BillingAddOrderData['path']['productId'],
+        data: NonNullable<BillingAddOrderData['body']>,
+        options?: FacadeOptions<BillingAddOrderData, ThrowOnError>,
+    ): ReturnType<typeof billingAddOrder<ThrowOnError>> {
+        return billingAddOrder<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { groupId, productId },
+            body: data,
+        });
+    }
+
+    public getStoreGroups<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<BillingGetStoreGroupsData, ThrowOnError>,
+    ): ReturnType<typeof billingGetStoreGroups<ThrowOnError>> {
+        return billingGetStoreGroups<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
+    }
+
+    public getAutoPayStatuses<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<BillingGetAutoPayStatusesData, ThrowOnError>,
+    ): ReturnType<typeof billingGetAutoPayStatuses<ThrowOnError>> {
+        return billingGetAutoPayStatuses<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
+    }
+
+    public makePayment<ThrowOnError extends boolean = false>(
+        id: BillingMakePaymentData['path']['id'],
+        data?: NonNullable<BillingMakePaymentData['body']>,
+        options?: FacadeOptions<BillingMakePaymentData, ThrowOnError>,
+    ): ReturnType<typeof billingMakePayment<ThrowOnError>> {
+        return billingMakePayment<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public bulkPayWithBalance<ThrowOnError extends boolean = false>(
+        data?: NonNullable<BillingBulkPayWithBalanceData['body']>,
+        options?: FacadeOptions<BillingBulkPayWithBalanceData, ThrowOnError>,
+    ): ReturnType<typeof billingBulkPayWithBalance<ThrowOnError>> {
+        return billingBulkPayWithBalance<ThrowOnError>({
+            ...options,
+            client: this.client,
+            body: data,
+        });
+    }
+
+    public previewBulkPayment<ThrowOnError extends boolean = false>(
+        data?: NonNullable<BillingPreviewBulkPaymentData['body']>,
+        options?: FacadeOptions<BillingPreviewBulkPaymentData, ThrowOnError>,
+    ): ReturnType<typeof billingPreviewBulkPayment<ThrowOnError>> {
+        return billingPreviewBulkPayment<ThrowOnError>({
+            ...options,
+            client: this.client,
+            body: data,
+        });
+    }
+
+    public getPaymentMethods<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<BillingGetPaymentMethodsData, ThrowOnError>,
+    ): ReturnType<typeof billingGetPaymentMethods<ThrowOnError>> {
+        return billingGetPaymentMethods<ThrowOnError>({
             ...options,
             client: this.client,
         });
@@ -301,6 +503,18 @@ export class FirewallClient {
         });
     }
 
+    public getLiveTraffic<ThrowOnError extends boolean = false>(
+        id: FirewallGetLiveTrafficData['path']['id'],
+        ip: FirewallGetLiveTrafficData['path']['ip'],
+        options?: FacadeOptions<FirewallGetLiveTrafficData, ThrowOnError>,
+    ): ReturnType<typeof firewallGetLiveTraffic<ThrowOnError>> {
+        return firewallGetLiveTraffic<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, ip },
+        });
+    }
+
     public resetReverseDns<ThrowOnError extends boolean = false>(
         id: FirewallResetReverseDnsData['path']['id'],
         ip: FirewallResetReverseDnsData['path']['ip'],
@@ -380,6 +594,92 @@ export class FirewallClient {
 export class MailHostingClient {
     public constructor(private readonly client: NodestyClient) {}
 
+    public listAliases<ThrowOnError extends boolean = false>(
+        id: MailHostingListAliasesData['path']['id'],
+        options?: FacadeOptions<MailHostingListAliasesData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingListAliases<ThrowOnError>> {
+        return mailHostingListAliases<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public createAlias<ThrowOnError extends boolean = false>(
+        id: MailHostingCreateAliasData['path']['id'],
+        data: NonNullable<MailHostingCreateAliasData['body']>,
+        options?: FacadeOptions<MailHostingCreateAliasData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingCreateAlias<ThrowOnError>> {
+        return mailHostingCreateAlias<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public deleteAlias<ThrowOnError extends boolean = false>(
+        id: MailHostingDeleteAliasData['path']['id'],
+        alias: MailHostingDeleteAliasData['path']['alias'],
+        options?: FacadeOptions<MailHostingDeleteAliasData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingDeleteAlias<ThrowOnError>> {
+        return mailHostingDeleteAlias<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, alias },
+        });
+    }
+
+    public updateAlias<ThrowOnError extends boolean = false>(
+        id: MailHostingUpdateAliasData['path']['id'],
+        alias: MailHostingUpdateAliasData['path']['alias'],
+        data: NonNullable<MailHostingUpdateAliasData['body']>,
+        options?: FacadeOptions<MailHostingUpdateAliasData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingUpdateAlias<ThrowOnError>> {
+        return mailHostingUpdateAlias<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, alias },
+            body: data,
+        });
+    }
+
+    public listDomainAliases<ThrowOnError extends boolean = false>(
+        id: MailHostingListDomainAliasesData['path']['id'],
+        options?: FacadeOptions<MailHostingListDomainAliasesData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingListDomainAliases<ThrowOnError>> {
+        return mailHostingListDomainAliases<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public addDomainAlias<ThrowOnError extends boolean = false>(
+        id: MailHostingAddDomainAliasData['path']['id'],
+        data: NonNullable<MailHostingAddDomainAliasData['body']>,
+        options?: FacadeOptions<MailHostingAddDomainAliasData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingAddDomainAlias<ThrowOnError>> {
+        return mailHostingAddDomainAlias<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public removeDomainAlias<ThrowOnError extends boolean = false>(
+        id: MailHostingRemoveDomainAliasData['path']['id'],
+        alias: MailHostingRemoveDomainAliasData['path']['alias'],
+        options?: FacadeOptions<MailHostingRemoveDomainAliasData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingRemoveDomainAlias<ThrowOnError>> {
+        return mailHostingRemoveDomainAlias<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, alias },
+        });
+    }
+
     public getInformation<ThrowOnError extends boolean = false>(
         id: MailHostingGetInformationData['path']['id'],
         options?: FacadeOptions<MailHostingGetInformationData, ThrowOnError>,
@@ -388,6 +688,81 @@ export class MailHostingClient {
             ...options,
             client: this.client,
             path: { id },
+        });
+    }
+
+    public refreshUsageStatistics<ThrowOnError extends boolean = false>(
+        id: MailHostingRefreshUsageStatisticsData['path']['id'],
+        options?: FacadeOptions<MailHostingRefreshUsageStatisticsData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingRefreshUsageStatistics<ThrowOnError>> {
+        return mailHostingRefreshUsageStatistics<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public listMailboxes<ThrowOnError extends boolean = false>(
+        id: MailHostingListMailboxesData['path']['id'],
+        options?: FacadeOptions<MailHostingListMailboxesData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingListMailboxes<ThrowOnError>> {
+        return mailHostingListMailboxes<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public createMailbox<ThrowOnError extends boolean = false>(
+        id: MailHostingCreateMailboxData['path']['id'],
+        data: NonNullable<MailHostingCreateMailboxData['body']>,
+        options?: FacadeOptions<MailHostingCreateMailboxData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingCreateMailbox<ThrowOnError>> {
+        return mailHostingCreateMailbox<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public deleteMailbox<ThrowOnError extends boolean = false>(
+        id: MailHostingDeleteMailboxData['path']['id'],
+        username: MailHostingDeleteMailboxData['path']['username'],
+        options?: FacadeOptions<MailHostingDeleteMailboxData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingDeleteMailbox<ThrowOnError>> {
+        return mailHostingDeleteMailbox<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, username },
+        });
+    }
+
+    public updateMailbox<ThrowOnError extends boolean = false>(
+        id: MailHostingUpdateMailboxData['path']['id'],
+        username: MailHostingUpdateMailboxData['path']['username'],
+        data: NonNullable<MailHostingUpdateMailboxData['body']>,
+        options?: FacadeOptions<MailHostingUpdateMailboxData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingUpdateMailbox<ThrowOnError>> {
+        return mailHostingUpdateMailbox<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, username },
+            body: data,
+        });
+    }
+
+    public changeMailboxPassword<ThrowOnError extends boolean = false>(
+        id: MailHostingChangeMailboxPasswordData['path']['id'],
+        username: MailHostingChangeMailboxPasswordData['path']['username'],
+        data: NonNullable<MailHostingChangeMailboxPasswordData['body']>,
+        options?: FacadeOptions<MailHostingChangeMailboxPasswordData, ThrowOnError>,
+    ): ReturnType<typeof mailHostingChangeMailboxPassword<ThrowOnError>> {
+        return mailHostingChangeMailboxPassword<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, username },
+            body: data,
         });
     }
 }
@@ -455,12 +830,73 @@ export class VirtualServerClient {
         });
     }
 
+    public getBootOrder<ThrowOnError extends boolean = false>(
+        id: VirtualServerGetBootOrderData['path']['id'],
+        options?: FacadeOptions<VirtualServerGetBootOrderData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetBootOrder<ThrowOnError>> {
+        return virtualServerGetBootOrder<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public updateBootOrder<ThrowOnError extends boolean = false>(
+        id: VirtualServerUpdateBootOrderData['path']['id'],
+        data: NonNullable<VirtualServerUpdateBootOrderData['body']>,
+        options?: FacadeOptions<VirtualServerUpdateBootOrderData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerUpdateBootOrder<ThrowOnError>> {
+        return virtualServerUpdateBootOrder<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
     public changePassword<ThrowOnError extends boolean = false>(
         id: VirtualServerChangePasswordData['path']['id'],
         data: NonNullable<VirtualServerChangePasswordData['body']>,
         options?: FacadeOptions<VirtualServerChangePasswordData, ThrowOnError>,
     ): ReturnType<typeof virtualServerChangePassword<ThrowOnError>> {
         return virtualServerChangePassword<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public unmountIso<ThrowOnError extends boolean = false>(
+        id: VirtualServerUnmountIsoData['path']['id'],
+        data: NonNullable<VirtualServerUnmountIsoData['body']>,
+        options?: FacadeOptions<VirtualServerUnmountIsoData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerUnmountIso<ThrowOnError>> {
+        return virtualServerUnmountIso<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public getMountedIsos<ThrowOnError extends boolean = false>(
+        id: VirtualServerGetMountedIsosData['path']['id'],
+        options?: FacadeOptions<VirtualServerGetMountedIsosData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetMountedIsos<ThrowOnError>> {
+        return virtualServerGetMountedIsos<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public mountIso<ThrowOnError extends boolean = false>(
+        id: VirtualServerMountIsoData['path']['id'],
+        data: NonNullable<VirtualServerMountIsoData['body']>,
+        options?: FacadeOptions<VirtualServerMountIsoData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerMountIso<ThrowOnError>> {
+        return virtualServerMountIso<ThrowOnError>({
             ...options,
             client: this.client,
             path: { id },
@@ -514,6 +950,66 @@ export class VirtualServerClient {
         });
     }
 
+    public getPowerSchedules<ThrowOnError extends boolean = false>(
+        id: VirtualServerGetPowerSchedulesData['path']['id'],
+        options?: FacadeOptions<VirtualServerGetPowerSchedulesData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetPowerSchedules<ThrowOnError>> {
+        return virtualServerGetPowerSchedules<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public createPowerSchedule<ThrowOnError extends boolean = false>(
+        id: VirtualServerCreatePowerScheduleData['path']['id'],
+        data: NonNullable<VirtualServerCreatePowerScheduleData['body']>,
+        options?: FacadeOptions<VirtualServerCreatePowerScheduleData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerCreatePowerSchedule<ThrowOnError>> {
+        return virtualServerCreatePowerSchedule<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+            body: data,
+        });
+    }
+
+    public deletePowerSchedule<ThrowOnError extends boolean = false>(
+        id: VirtualServerDeletePowerScheduleData['path']['id'],
+        scheduleId: VirtualServerDeletePowerScheduleData['path']['scheduleId'],
+        options?: FacadeOptions<VirtualServerDeletePowerScheduleData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerDeletePowerSchedule<ThrowOnError>> {
+        return virtualServerDeletePowerSchedule<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, scheduleId },
+        });
+    }
+
+    public updatePowerSchedule<ThrowOnError extends boolean = false>(
+        id: VirtualServerUpdatePowerScheduleData['path']['id'],
+        scheduleId: VirtualServerUpdatePowerScheduleData['path']['scheduleId'],
+        options?: FacadeOptions<VirtualServerUpdatePowerScheduleData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerUpdatePowerSchedule<ThrowOnError>> {
+        return virtualServerUpdatePowerSchedule<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, scheduleId },
+        });
+    }
+
+    public runPowerScheduleNow<ThrowOnError extends boolean = false>(
+        id: VirtualServerRunPowerScheduleNowData['path']['id'],
+        scheduleId: VirtualServerRunPowerScheduleNowData['path']['scheduleId'],
+        options?: FacadeOptions<VirtualServerRunPowerScheduleNowData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerRunPowerScheduleNow<ThrowOnError>> {
+        return virtualServerRunPowerScheduleNow<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id, scheduleId },
+        });
+    }
+
     public getTasks<ThrowOnError extends boolean = false>(
         id: VirtualServerGetTasksData['path']['id'],
         options?: FacadeOptions<VirtualServerGetTasksData, ThrowOnError>,
@@ -524,82 +1020,101 @@ export class VirtualServerClient {
             path: { id },
         });
     }
+
+    public getCustomIsoLibrary<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<VirtualServerGetCustomIsoLibraryData, ThrowOnError>,
+    ): ReturnType<typeof virtualServerGetCustomIsoLibrary<ThrowOnError>> {
+        return virtualServerGetCustomIsoLibrary<ThrowOnError>({
+            ...options,
+            client: this.client,
+        });
+    }
 }
 
-export class BillingClient {
+export class TeamsClient {
     public constructor(private readonly client: NodestyClient) {}
 
-    public getProductsByGroupId<ThrowOnError extends boolean = false>(
-        groupId: BillingGetProductsByGroupIdData['path']['groupId'],
-        options?: FacadeOptions<BillingGetProductsByGroupIdData, ThrowOnError>,
-    ): ReturnType<typeof billingGetProductsByGroupId<ThrowOnError>> {
-        return billingGetProductsByGroupId<ThrowOnError>({
-            ...options,
-            client: this.client,
-            path: { groupId },
-        });
-    }
-
-    public addOrder<ThrowOnError extends boolean = false>(
-        groupId: BillingAddOrderData['path']['groupId'],
-        productId: BillingAddOrderData['path']['productId'],
-        data: NonNullable<BillingAddOrderData['body']>,
-        options?: FacadeOptions<BillingAddOrderData, ThrowOnError>,
-    ): ReturnType<typeof billingAddOrder<ThrowOnError>> {
-        return billingAddOrder<ThrowOnError>({
-            ...options,
-            client: this.client,
-            path: { groupId, productId },
-            body: data,
-        });
-    }
-
-    public getStoreGroups<ThrowOnError extends boolean = false>(
-        options?: FacadeOptions<BillingGetStoreGroupsData, ThrowOnError>,
-    ): ReturnType<typeof billingGetStoreGroups<ThrowOnError>> {
-        return billingGetStoreGroups<ThrowOnError>({
+    public listTeams<ThrowOnError extends boolean = false>(
+        options?: FacadeOptions<TeamsListTeamsData, ThrowOnError>,
+    ): ReturnType<typeof teamsListTeams<ThrowOnError>> {
+        return teamsListTeams<ThrowOnError>({
             ...options,
             client: this.client,
         });
     }
 
-    public makePayment<ThrowOnError extends boolean = false>(
-        id: BillingMakePaymentData['path']['id'],
-        data?: NonNullable<BillingMakePaymentData['body']>,
-        options?: FacadeOptions<BillingMakePaymentData, ThrowOnError>,
-    ): ReturnType<typeof billingMakePayment<ThrowOnError>> {
-        return billingMakePayment<ThrowOnError>({
+    public getTeam<ThrowOnError extends boolean = false>(
+        id: TeamsGetTeamData['path']['id'],
+        options?: FacadeOptions<TeamsGetTeamData, ThrowOnError>,
+    ): ReturnType<typeof teamsGetTeam<ThrowOnError>> {
+        return teamsGetTeam<ThrowOnError>({
             ...options,
             client: this.client,
             path: { id },
-            body: data,
         });
     }
 
-    public getPaymentMethods<ThrowOnError extends boolean = false>(
-        options?: FacadeOptions<BillingGetPaymentMethodsData, ThrowOnError>,
-    ): ReturnType<typeof billingGetPaymentMethods<ThrowOnError>> {
-        return billingGetPaymentMethods<ThrowOnError>({
+    public getTeamLogs<ThrowOnError extends boolean = false>(
+        id: TeamsGetTeamLogsData['path']['id'],
+        options?: FacadeOptions<TeamsGetTeamLogsData, ThrowOnError>,
+    ): ReturnType<typeof teamsGetTeamLogs<ThrowOnError>> {
+        return teamsGetTeamLogs<ThrowOnError>({
             ...options,
             client: this.client,
+            path: { id },
+        });
+    }
+
+    public listTeamMembers<ThrowOnError extends boolean = false>(
+        id: TeamsListTeamMembersData['path']['id'],
+        options?: FacadeOptions<TeamsListTeamMembersData, ThrowOnError>,
+    ): ReturnType<typeof teamsListTeamMembers<ThrowOnError>> {
+        return teamsListTeamMembers<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public listApprovalRequests<ThrowOnError extends boolean = false>(
+        id: TeamsListApprovalRequestsData['path']['id'],
+        options?: FacadeOptions<TeamsListApprovalRequestsData, ThrowOnError>,
+    ): ReturnType<typeof teamsListApprovalRequests<ThrowOnError>> {
+        return teamsListApprovalRequests<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
+        });
+    }
+
+    public listTeamServices<ThrowOnError extends boolean = false>(
+        id: TeamsListTeamServicesData['path']['id'],
+        options?: FacadeOptions<TeamsListTeamServicesData, ThrowOnError>,
+    ): ReturnType<typeof teamsListTeamServices<ThrowOnError>> {
+        return teamsListTeamServices<ThrowOnError>({
+            ...options,
+            client: this.client,
+            path: { id },
         });
     }
 }
 
 export class GeneratedNodestyApiClient {
     public readonly user: UserClient;
+    public readonly billing: BillingClient;
     public readonly dedicatedServer: DedicatedServerClient;
     public readonly firewall: FirewallClient;
     public readonly mailHosting: MailHostingClient;
     public readonly virtualServer: VirtualServerClient;
-    public readonly billing: BillingClient;
+    public readonly teams: TeamsClient;
 
     public constructor(public readonly client: NodestyClient) {
         this.user = new UserClient(client);
+        this.billing = new BillingClient(client);
         this.dedicatedServer = new DedicatedServerClient(client);
         this.firewall = new FirewallClient(client);
         this.mailHosting = new MailHostingClient(client);
         this.virtualServer = new VirtualServerClient(client);
-        this.billing = new BillingClient(client);
+        this.teams = new TeamsClient(client);
     }
 }
